@@ -11455,6 +11455,12 @@ impl App {
         crate::ui::overlay::settle(self, ctx);
         // The old colours, if a change is being revealed, go over everything.
         self.theme_transition.paint(ctx);
+        // The viewer's full-resolution texture lives only while it is open.
+        // The lock screen does not draw it either, so the decode does not sit
+        // there until the next unlock.
+        if locked || self.image_preview.is_none() {
+            crate::image_cache::release_viewer(ctx);
+        }
         // Release the image caches of everything that scrolled away.
         crate::image_cache::sweep(ctx);
         // Only fading info toasts animate. Errors wait for the reader.
