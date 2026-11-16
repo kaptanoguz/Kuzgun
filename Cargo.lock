@@ -8911,7 +8911,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "zapfast"
+name = "kuzgun"
 version = "0.21.2"
 dependencies = [
  "aes 0.9.3",

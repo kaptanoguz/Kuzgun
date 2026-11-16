@@ -766,9 +766,11 @@ pub fn hue(seed: &str) -> f32 {
 }
 
 /// Embedded SVG app logo used across platform surfaces.
-const MARK: &[u8] = include_bytes!("../packaging/icons/zapfast.svg");
-/// The same mark without its rim and shading, which blur below this size.
-const SMALL_MARK: &[u8] = include_bytes!("../packaging/icons/zapfast-small.svg");
+const MARK: &[u8] = include_bytes!("../packaging/icons/kuzgun.svg");
+/// The same mark with a solid seal, which holds up below this size.
+const SMALL_MARK: &[u8] = include_bytes!("../packaging/icons/kuzgun-small.svg");
+/// Monochrome raven with a cream outline, for the tray on a dark or light panel.
+const SYMBOLIC_MARK: &[u8] = include_bytes!("../packaging/icons/kuzgun-symbolic.svg");
 const SMALL_BELOW: usize = 40;
 
 /// Rasterizes the logo to straight-alpha RGBA.
@@ -813,29 +815,34 @@ fn plain_disc(size: usize) -> Vec<u8> {
             let distance = ((px - center).powi(2) + (py - center).powi(2)).sqrt();
             let coverage = (radius - distance + 0.5).clamp(0.0, 1.0);
             let index = (y * size + x) * 4;
-            rgba[index] = 0;
-            rgba[index + 1] = 168;
-            rgba[index + 2] = 132;
+            rgba[index] = 0xfb;
+            rgba[index + 1] = 0xf5;
+            rgba[index + 2] = 0xec;
             rgba[index + 3] = (coverage * 255.0) as u8;
         }
     }
     rgba
 }
 
-/// Converts the logo to a monochrome macOS menu-bar template: the disc,
-/// with the bubble cut out of it.
+/// The tray's symbolic raven: black, with a cream outline so it stays visible
+/// on a dark panel and a light one (#779).
+pub fn tray_symbol_rgba(size: usize) -> Vec<u8> {
+    render_mark(SYMBOLIC_MARK, size).unwrap_or_else(|| plain_disc(size))
+}
+
+/// Converts the symbolic raven to a macOS menu-bar template: black pixels and
+/// the shape's alpha, which the menu bar recolours.
 pub fn tray_template_rgba(size: usize) -> Vec<u8> {
-    // The flat mark at every size: a template has no room for shading.
-    let mut rgba = render_mark(SMALL_MARK, size).unwrap_or_else(|| plain_disc(size));
-    // The disc's green against the ink's says how much of a pixel is disc.
-    const INK: f32 = 14.0;
-    const DISC: f32 = 168.0;
+    let mut rgba = tray_symbol_rgba(size);
     for pixel in rgba.as_chunks_mut::<4>().0 {
-        let disc = ((f32::from(pixel[1]) - INK) / (DISC - INK)).clamp(0.0, 1.0);
-        pixel[3] = (f32::from(pixel[3]) * disc).round() as u8;
+        // The cream outline and the black raven are both part of the shape.
+        let ink = pixel[3] > 16;
         pixel[0] = 0;
         pixel[1] = 0;
         pixel[2] = 0;
+        if !ink {
+            pixel[3] = 0;
+        }
     }
     rgba
 }
@@ -876,12 +883,12 @@ type TrayIcon = fn(usize) -> Vec<u8>;
 pub fn tray_icons(count: u32) -> (TrayIcon, TrayIcon) {
     fn pair<const COUNT: u32>() -> (TrayIcon, TrayIcon) {
         (
-            |size| badged(app_icon_rgba(size), size, COUNT, false),
+            |size| badged(tray_symbol_rgba(size), size, COUNT, false),
             |size| badged(tray_template_rgba(size), size, COUNT, true),
         )
     }
     match tray_badge_level(count) {
-        0 => (app_icon_rgba, tray_template_rgba),
+        0 => (tray_symbol_rgba, tray_template_rgba),
         1 => pair::<1>(),
         2 => pair::<2>(),
         3 => pair::<3>(),
@@ -1207,7 +1214,11 @@ mod tests {
         // tray that asks for the themed icon then draws a missing-icon
         // marker (#396).
         let svg = std::str::from_utf8(MARK).expect("the icon is UTF-8");
-        assert!(!svg.contains("<filter"), "packaging/icons/zapfast.svg");
+        assert!(!svg.contains("<filter"), "packaging/icons/kuzgun.svg");
+        assert!(!svg.contains("gradient"), "packaging/icons/kuzgun.svg");
+        let symbolic = std::str::from_utf8(SYMBOLIC_MARK).expect("the tray icon is UTF-8");
+        assert!(!symbolic.contains("<filter"));
+        assert!(!symbolic.contains("gradient"));
     }
 
     #[test]
@@ -1433,18 +1444,16 @@ mod tests {
         assert_eq!(icon[middle + 3], 255);
     }
 
-    /// The menu-bar template is the disc with the bubble cut out: solid in
-    /// the bubble's middle, clear along its outline and outside the disc.
     #[test]
     fn the_tray_icon_counts_unread_chats_up_to_nine_and_more() {
-        use super::{app_icon_rgba, tray_icons, tray_template_rgba};
+        use super::{tray_icons, tray_symbol_rgba, tray_template_rgba};
         let size = 32;
-        assert_eq!(tray_icons(0).0(size), app_icon_rgba(size));
+        assert_eq!(tray_icons(0).0(size), tray_symbol_rgba(size));
         assert_eq!(tray_icons(0).1(size), tray_template_rgba(size));
         assert_eq!(tray_icons(10).0(size), tray_icons(250).0(size));
         let icons: Vec<_> = (1..=10).map(|count| tray_icons(count).0(size)).collect();
         for (index, icon) in icons.iter().enumerate() {
-            assert_ne!(*icon, app_icon_rgba(size));
+            assert_ne!(*icon, tray_symbol_rgba(size));
             for other in &icons[index + 1..] {
                 assert_ne!(icon, other, "each count draws differently");
             }
@@ -1470,15 +1479,31 @@ mod tests {
     }
 
     #[test]
-    fn the_tray_template_cuts_the_bubble_out_of_the_disc() {
+    /// The symbolic tray mark is a black raven with a cream outline, so a
+    /// dark panel and a light one both show it (#779). The macOS template is
+    /// that shape in black.
+    fn the_tray_symbol_reads_on_dark_and_light_panels() {
         let size = 64;
+        let symbol = tray_symbol_rgba(size);
+        let pixels = symbol.as_chunks::<4>().0;
+        assert_eq!(pixels[0][3], 0, "the corner is clear");
+        let cream = pixels
+            .iter()
+            .any(|p| p[3] > 200 && p[0] > 200 && p[1] > 200);
+        let black = pixels
+            .iter()
+            .any(|p| p[3] > 200 && p[0] < 30 && p[1] < 30 && p[2] < 30);
+        assert!(cream, "a cream outline shows on a dark panel");
+        assert!(black, "the raven shows on a light panel");
+        assert!(
+            pixels.iter().all(|p| {
+                p[3] == 0
+                    || (p[1] as i16 - p[0] as i16).abs() < 40
+                        && (p[1] as i16 - p[2] as i16).abs() < 80
+            }),
+            "the tray mark is black and cream"
+        );
         let template = tray_template_rgba(size);
-        let alpha = |x: usize, y: usize| template[(y * size + x) * 4 + 3];
-        assert_eq!(alpha(0, 0), 0);
-        assert_eq!(alpha(32, 32), 255, "inside the bubble is disc");
-        assert_eq!(alpha(32, 4), 255, "so is the rim above it");
-        let outline = (0..32).map(|y| alpha(32, y)).min().unwrap();
-        assert!(outline < 40, "the outline is cut out: {outline}");
         assert!(
             template
                 .as_chunks::<4>()
@@ -1486,6 +1511,8 @@ mod tests {
                 .iter()
                 .all(|p| p[..3] == [0, 0, 0])
         );
+        assert!(template.as_chunks::<4>().0.iter().any(|p| p[3] == 0));
+        assert!(template.as_chunks::<4>().0.iter().any(|p| p[3] == 255));
     }
 
     /// Both marks render, the large one with its filters.

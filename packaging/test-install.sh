@@ -27,29 +27,30 @@ docker run --rm \
     set -- /packages/*."$FORMAT"
     test "$#" -eq 1
     test -f "$1"
-    mkdir -p /root/.config/zapfast
-    printf "%s\n" "preserve-existing-settings" > /root/.config/zapfast/fixture
+    mkdir -p /root/.config/kuzgun
+    printf "%s\n" "preserve-existing-settings" > /root/.config/kuzgun/fixture
     if [ "$FORMAT" = deb ]; then
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "$1"
-      dpkg-query -W zapfast
+      dpkg-query -W kuzgun
     else
       dnf install -y --setopt=install_weak_deps=False "$1"
-      rpm -q zapfast
+      rpm -q kuzgun
     fi
-    zapfast --version
+    kuzgun --version
     /checks/check-runtime-libs
-    test -s /usr/share/applications/zapfast.desktop
-    test -s /usr/share/icons/hicolor/scalable/apps/zapfast.svg
-    grep -qx "Icon=zapfast" /usr/share/applications/zapfast.desktop
-    grep -qx "StartupWMClass=zapfast" /usr/share/applications/zapfast.desktop
-    test -s /usr/share/zapfast/omarchy/zapfast.json.tpl
-    test -x /usr/share/zapfast/omarchy/zapfast-theme
-    if [ "$FORMAT" = deb ]; then apt-get remove -y zapfast; else dnf remove -y zapfast; fi
-    test ! -e /usr/bin/zapfast
-    test ! -e /usr/share/applications/zapfast.desktop
-    test ! -e /usr/share/icons/hicolor/scalable/apps/zapfast.svg
-    test ! -e /usr/share/zapfast/omarchy/zapfast.json.tpl
-    test ! -e /usr/share/zapfast/omarchy/zapfast-theme
-    test "$(cat /root/.config/zapfast/fixture)" = preserve-existing-settings
+    test -s /usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop
+    test -s /usr/share/icons/hicolor/scalable/apps/io.github.kaptanoguz.Kuzgun.svg
+    test -s /usr/share/icons/hicolor/48x48/apps/io.github.kaptanoguz.Kuzgun.png
+    grep -qx "Icon=io.github.kaptanoguz.Kuzgun" /usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop
+    grep -qx "StartupWMClass=io.github.kaptanoguz.Kuzgun" /usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop
+    test -s /usr/share/kuzgun/omarchy/kuzgun.json.tpl
+    test -x /usr/share/kuzgun/omarchy/kuzgun-theme
+    if [ "$FORMAT" = deb ]; then apt-get remove -y kuzgun; else dnf remove -y kuzgun; fi
+    test ! -e /usr/bin/kuzgun
+    test ! -e /usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop
+    test ! -e /usr/share/icons/hicolor/scalable/apps/io.github.kaptanoguz.Kuzgun.svg
+    test ! -e /usr/share/kuzgun/omarchy/kuzgun.json.tpl
+    test ! -e /usr/share/kuzgun/omarchy/kuzgun-theme
+    test "$(cat /root/.config/kuzgun/fixture)" = preserve-existing-settings
   '

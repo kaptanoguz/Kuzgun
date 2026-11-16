@@ -11,7 +11,7 @@ use std::sync::mpsc::{Receiver, TryRecvError};
 use fastframe_autostart::{Autostart, Start, State};
 
 fn autostart() -> Autostart {
-    Autostart::new("zapfast", "ZapFast")
+    Autostart::new("io.github.kaptanoguz.Kuzgun", "Kuzgun")
 }
 
 /// What a finished read or change found.

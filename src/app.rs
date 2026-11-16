@@ -1320,16 +1320,16 @@ fn tray_action(event: fastframe_tray::Event, window_hidden: bool) -> Option<Acti
 fn tray_config(lockable: bool) -> fastframe_tray::Config {
     use fastframe_tray::MenuItem;
     fastframe_tray::Config {
-        id: "zapfast",
-        title: "ZapFast".into(),
-        icon: crate::util::app_icon_rgba,
+        id: "kuzgun",
+        title: "Kuzgun".into(),
+        icon: crate::util::tray_symbol_rgba,
         template_icon: Some(crate::util::tray_template_rgba),
         // The icon changes with the unread count, which a host that has the
         // installed icon's name would draw instead.
         themed_icon: false,
         menu: vec![
-            MenuItem::action(TRAY_SHOW, "Show or hide ZapFast"),
-            MenuItem::action(TRAY_LOCK, "Lock ZapFast").visible(lockable),
+            MenuItem::action(TRAY_SHOW, "Show or hide Kuzgun"),
+            MenuItem::action(TRAY_LOCK, "Lock Kuzgun").visible(lockable),
             MenuItem::Separator,
             MenuItem::action(TRAY_QUIT, "Quit"),
         ],
@@ -1354,16 +1354,12 @@ fn closing_keeps_running(dock: bool, tray_shown: bool, keep_running: bool) -> bo
 /// How often the panel's light or dark style is read again.
 const TRAY_COLOUR_EVERY: Duration = Duration::from_secs(3);
 
-/// The tray icon's colour on a panel that is dark or light. An unknown panel
-/// keeps the app's own full-colour icon, which reads on either; so does the
-/// macOS menu bar, where it is the template the bar recolours.
-fn tray_colour(panel_dark: Option<bool>) -> fastframe_tray::IconColour {
-    use fastframe_tray::IconColour;
-    match panel_dark {
-        Some(true) => IconColour::White,
-        Some(false) => IconColour::Black,
-        None => IconColour::Original,
-    }
+/// The tray mark is drawn as itself: a black raven with a cream outline, which
+/// stays visible on a dark panel and a light one. Painting it a single colour
+/// is what made it disappear on a dark panel whose colour scheme was light
+/// (#779). macOS recolours the template and does not use this colour.
+fn tray_colour(_panel_dark: Option<bool>) -> fastframe_tray::IconColour {
+    fastframe_tray::IconColour::Original
 }
 
 /// Process-level app services.
@@ -4877,7 +4873,7 @@ impl App {
             Event::UpdateAvailable { version, url } => {
                 let notice = crate::updates::Release { version, url };
                 if self.update.as_ref() != Some(&notice) {
-                    self.toast(format!("ZapFast {} is available", notice.version));
+                    self.toast(format!("Kuzgun {} is available", notice.version));
                 }
                 self.update = Some(notice);
             }
@@ -4938,7 +4934,7 @@ impl App {
                     .into_owned(),
                     crate::calls::CALL_LINKS_OFF => crate::i18n::gettext(
                         self.locale,
-                        "ZapFast can't join group calls yet: open the link on your phone.",
+                        "Kuzgun can't join group calls yet: open the link on your phone.",
                     )
                     .into_owned(),
                     "Connect to WhatsApp to change disappearing messages." => {
@@ -5011,7 +5007,7 @@ impl App {
                     ),
                     ArchiveFailure::Write => crate::i18n::gettext(
                         self.locale,
-                        "WhatsApp updated this chat, but ZapFast could not save the change",
+                        "WhatsApp updated this chat, but Kuzgun could not save the change",
                     ),
                 };
                 self.toast_error(message);
@@ -5781,7 +5777,7 @@ impl App {
             }
             Refusal::Offline => crate::i18n::gettext(
                 self.locale,
-                "Not sent: ZapFast is not connected to WhatsApp.",
+                "Not sent: Kuzgun is not connected to WhatsApp.",
             ),
             Refusal::QuoteUnavailable => crate::i18n::gettext(
                 self.locale,
@@ -7855,7 +7851,7 @@ impl App {
                     // own, or one that never decodes would download forever:
                     // the bubble offers the retry, as a failed download does.
                     log::warn!("a downloaded attachment could not be displayed");
-                    media.state = MediaState::Failed("ZapFast could not display this file".into());
+                    media.state = MediaState::Failed("Kuzgun could not display this file".into());
                 } else if !matches!(media.state, MediaState::Downloading) {
                     // Gone from the disk: it downloads again like any
                     // attachment that was never downloaded.
@@ -8070,7 +8066,7 @@ impl App {
                     } else {
                         self.toast(crate::i18n::gettext(
                             self.locale,
-                            "ZapFast can't join group calls yet: open the link on your phone.",
+                            "Kuzgun can't join group calls yet: open the link on your phone.",
                         ));
                     }
                 } else if let Some(code) = crate::safety::group_invite_code(&url) {
@@ -8083,7 +8079,7 @@ impl App {
                 } else if let Some(url) = crate::safety::external_url(&url) {
                     ctx.open_url(egui::OpenUrl::new_tab(url));
                 } else {
-                    self.toast_error("This link type cannot be opened from ZapFast");
+                    self.toast_error("This link type cannot be opened from Kuzgun");
                 }
             }
             Action::CopyText(text) => {
@@ -9320,7 +9316,7 @@ impl App {
                     self.toast_error(
                         crate::i18n::gettext(
                             self.locale,
-                            "You have {limit} labels, the most ZapFast keeps.",
+                            "You have {limit} labels, the most Kuzgun keeps.",
                         )
                         .replace("{limit}", &crate::archive::LABEL_LIMIT.to_string()),
                     );
@@ -10538,7 +10534,7 @@ impl App {
                 self.start_with_system = crate::autostart::switch(state);
                 if outcome.changed && matches!(state, fastframe_autostart::State::NeedsApproval(_))
                 {
-                    self.toast("Allow ZapFast in System Settings, under Login Items.");
+                    self.toast("Allow Kuzgun in System Settings, under Login Items.");
                 }
             }
             Err(error) => {
@@ -15717,8 +15713,8 @@ mod tests {
     #[test]
     fn the_tray_icon_is_monochrome_against_a_known_panel() {
         use fastframe_tray::IconColour;
-        assert_eq!(super::tray_colour(Some(true)), IconColour::White);
-        assert_eq!(super::tray_colour(Some(false)), IconColour::Black);
+        assert_eq!(super::tray_colour(Some(true)), IconColour::Original);
+        assert_eq!(super::tray_colour(Some(false)), IconColour::Original);
         assert_eq!(super::tray_colour(None), IconColour::Original);
     }
 
@@ -18834,8 +18830,8 @@ mod tests {
             assert_eq!(
                 super::tray_config(lockable).menu,
                 [
-                    fastframe_tray::MenuItem::action(super::TRAY_SHOW, "Show or hide ZapFast"),
-                    fastframe_tray::MenuItem::action(super::TRAY_LOCK, "Lock ZapFast")
+                    fastframe_tray::MenuItem::action(super::TRAY_SHOW, "Show or hide Kuzgun"),
+                    fastframe_tray::MenuItem::action(super::TRAY_LOCK, "Lock Kuzgun")
                         .visible(lockable),
                     fastframe_tray::MenuItem::Separator,
                     fastframe_tray::MenuItem::action(super::TRAY_QUIT, "Quit"),
@@ -26865,7 +26861,7 @@ mod app_lock_tests {
         app.lock_app();
         app.maybe_notify(CHAT, &message);
         let shown = app.notifications.shown.last().unwrap();
-        assert_eq!(shown.title, "ZapFast");
+        assert_eq!(shown.title, "Kuzgun");
         assert_eq!(shown.body, "New message");
         assert_eq!(shown.picture, None);
         assert_eq!(
@@ -26900,7 +26896,7 @@ mod app_lock_tests {
         app.settings.notification_content = false;
         app.maybe_notify(CHAT, &message);
         let shown = app.notifications.shown.last().unwrap().clone();
-        assert_eq!(shown.title, "ZapFast");
+        assert_eq!(shown.title, "Kuzgun");
         assert_eq!(shown.body, "New message");
         assert_eq!(shown.picture, None);
         assert_eq!(shown.sound, app.settings.message_sound);

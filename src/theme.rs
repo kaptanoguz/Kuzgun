@@ -15,8 +15,8 @@ pub type Catalog = fastframe_theme::Catalog<Palette>;
 /// What a normal launch adds to the catalogue. Demos and tests leave it out
 /// and stay isolated from the desktop and its files.
 pub const DESKTOP_THEMES: fastframe_theme::DesktopThemes = fastframe_theme::DesktopThemes {
-    slug: "zapfast",
-    omarchy_template: include_str!("../contrib/omarchy/zapfast.json.tpl"),
+    slug: "kuzgun",
+    omarchy_template: include_str!("../contrib/omarchy/kuzgun.json.tpl"),
     // Every template ZapFast shipped before, so an untouched copy installed
     // by an older release is replaced with the current one.
     omarchy_previous_templates: &[include_str!(
@@ -1073,8 +1073,8 @@ pub fn circle_button(
     }
 }
 
-/// Draws the app's mark as it ships: the lit disc and the ink bubble of
-/// `packaging/icons/zapfast.svg`, rendered once per pixel size.
+/// Draws the app's mark as it ships: the raven of
+/// `packaging/icons/kuzgun.svg`, rendered once per pixel size.
 pub fn mark(ui: &egui::Ui, center: egui::Pos2, diameter: f32) {
     let ctx = ui.ctx();
     let pixels = (diameter * ctx.pixels_per_point()).round().max(1.0) as usize;
@@ -1098,20 +1098,9 @@ pub fn mark(ui: &egui::Ui, center: egui::Pos2, diameter: f32) {
     ui.painter().image(texture.id(), rect, uv, Color32::WHITE);
 }
 
-/// Draws the logo's shape in two flat colours, for the empty conversation's
-/// faint watermark.
-pub fn logo(ui: &egui::Ui, center: egui::Pos2, diameter: f32, disc: Color32, glyph: Color32) {
-    ui.painter().circle_filled(center, diameter / 2.0, disc);
-    // Match `packaging/icons/zapfast-small.svg`: the bubble sits a little
-    // right of and above the centre, where its tail balances it.
-    let icon_size = diameter * 0.674;
-    let icon_rect = egui::Rect::from_center_size(
-        center + Vec2::new(diameter * 0.009, -diameter * 0.009),
-        Vec2::splat(icon_size),
-    );
-    Icon::MessageCircle
-        .image(glyph, icon_size)
-        .paint_at(ui, icon_rect);
+/// Draws the app's mark, for the empty conversation's watermark.
+pub fn logo(ui: &egui::Ui, center: egui::Pos2, diameter: f32, _disc: Color32, _glyph: Color32) {
+    mark(ui, center, diameter);
 }
 
 /// A button's label on one line. egui lays right-to-left text out in logical
@@ -1984,7 +1973,7 @@ mod tests {
     /// renders as Omarchy's own renderer does.
     #[test]
     fn the_omarchy_template_renders_like_omarchy_in_light_and_dark_themes() {
-        const TEMPLATE: &str = include_str!("../contrib/omarchy/zapfast.json.tpl");
+        const TEMPLATE: &str = include_str!("../contrib/omarchy/kuzgun.json.tpl");
         for (colors, expected) in [
             (
                 include_str!("../tests/fixtures/omarchy/catppuccin.tsv"),
@@ -2016,8 +2005,8 @@ mod tests {
     #[test]
     fn the_shipped_omarchy_hook_has_not_drifted() {
         assert_eq!(
-            include_str!("../contrib/omarchy/zapfast-theme").replace("\r\n", "\n"),
-            fastframe_theme::omarchy::hook_script("zapfast")
+            include_str!("../contrib/omarchy/kuzgun-theme").replace("\r\n", "\n"),
+            fastframe_theme::omarchy::hook_script("kuzgun")
         );
     }
 

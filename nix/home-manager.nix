@@ -6,33 +6,33 @@ self:
   ...
 }:
 let
-  cfg = config.programs.zapfast;
+  cfg = config.programs.kuzgun;
   json = pkgs.formats.json { };
-  # paths.rs: ProjectDirs::from("me", "paolino", "zapfast").
+  # paths.rs: ProjectDirs::from("io.github", "kaptanoguz", "kuzgun").
   configDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "${config.home.homeDirectory}/Library/Application Support/me.paolino.zapfast"
+      "${config.home.homeDirectory}/Library/Application Support/io.github.kaptanoguz.kuzgun"
     else
-      "${config.xdg.configHome}/zapfast";
-  declared = json.generate "zapfast-settings.json" cfg.settings;
+      "${config.xdg.configHome}/kuzgun";
+  declared = json.generate "kuzgun-settings.json" cfg.settings;
   jq = lib.getExe pkgs.jq;
   readSecret = key: path: ''
     if [[ -r ${lib.escapeShellArg path} ]]; then
-      zapfastSecrets+=(--rawfile ${lib.escapeShellArg key} ${lib.escapeShellArg path})
+      kuzgunSecrets+=(--rawfile ${lib.escapeShellArg key} ${lib.escapeShellArg path})
     else
-      warnEcho ${lib.escapeShellArg "ZapFast: cannot read ${path}, keeping the current ${key}"}
+      warnEcho ${lib.escapeShellArg "Kuzgun: cannot read ${path}, keeping the current ${key}"}
     fi
   '';
 in
 {
-  options.programs.zapfast = {
-    enable = lib.mkEnableOption "ZapFast, a native WhatsApp client";
+  options.programs.kuzgun = {
+    enable = lib.mkEnableOption "Kuzgun, a native WhatsApp client";
 
     package = lib.mkOption {
       type = lib.types.package;
       default = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      defaultText = lib.literalExpression "zapfast.packages.\${pkgs.stdenv.hostPlatform.system}.default";
-      description = "The ZapFast package to install.";
+      defaultText = lib.literalExpression "kuzgun.packages.\${pkgs.stdenv.hostPlatform.system}.default";
+      description = "The Kuzgun package to install.";
     };
 
     settings = lib.mkOption {
@@ -46,18 +46,18 @@ in
         }
       '';
       description = ''
-        Keys merged into ZapFast's `settings.json` on every activation. Keys
+        Keys merged into Kuzgun's `settings.json` on every activation. Keys
         left out keep whatever the app last saved, so window geometry, recent
         emoji and the lock verifiers survive. A key declared here is reset on
         the next activation if it is changed in the app. Per-account preferences
         such as read receipts live in each account's own file and cannot be
-        declared here. Restart ZapFast after
+        declared here. Restart Kuzgun after
         activation: it reads the file at start, and its next save writes back
         the values it holds in memory.
 
         Values are copied to the Nix store, which every local user can read.
         Give secrets, such as proxy credentials or `giphy_key`, through
-        {option}`programs.zapfast.secretFiles` instead.
+        {option}`programs.kuzgun.secretFiles` instead.
       '';
     };
 
@@ -66,7 +66,7 @@ in
       default = { };
       example = lib.literalExpression ''
         {
-          proxy = config.sops.secrets.zapfast-proxy.path;
+          proxy = config.sops.secrets.kuzgun-proxy.path;
         }
       '';
       description = ''
@@ -85,7 +85,7 @@ in
     assertions = [
       {
         assertion = builtins.all (key: !(cfg.settings ? ${key})) (builtins.attrNames cfg.secretFiles);
-        message = "programs.zapfast: a key cannot be in both settings and secretFiles.";
+        message = "programs.kuzgun: a key cannot be in both settings and secretFiles.";
       }
     ];
 
@@ -93,36 +93,36 @@ in
 
     # settings.json cannot be a store symlink: the app replaces it whole on
     # every change and keeps its own state in it.
-    home.activation.zapfastSettings = lib.mkIf (cfg.settings != { } || cfg.secretFiles != { }) (
+    home.activation.kuzgunSettings = lib.mkIf (cfg.settings != { } || cfg.secretFiles != { }) (
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        zapfastDir=${lib.escapeShellArg configDir}
-        zapfastFile="$zapfastDir/settings.json"
-        run mkdir -p -m 700 "$zapfastDir"
-        if [[ ! -e "$zapfastFile" ]]; then
+        kuzgunDir=${lib.escapeShellArg configDir}
+        kuzgunFile="$kuzgunDir/settings.json"
+        run mkdir -p -m 700 "$kuzgunDir"
+        if [[ ! -e "$kuzgunFile" ]]; then
           # A file without a version is migrated as one from older releases,
           # which would replace an explicit beige or black wallpaper.
-          zapfastBase='{"version":1}'
-        elif zapfastBase=$(${jq} -ce objects "$zapfastFile" 2>/dev/null); then
+          kuzgunBase='{"version":1}'
+        elif kuzgunBase=$(${jq} -ce objects "$kuzgunFile" 2>/dev/null); then
           :
         else
-          warnEcho "ZapFast: $zapfastFile is not a JSON object, leaving it unchanged"
-          zapfastBase=
+          warnEcho "Kuzgun: $kuzgunFile is not a JSON object, leaving it unchanged"
+          kuzgunBase=
         fi
-        if [[ -z "$zapfastBase" ]]; then
+        if [[ -z "$kuzgunBase" ]]; then
           :
         elif [[ -v DRY_RUN ]]; then
-          echo "Would merge ${declared} into $zapfastFile"
+          echo "Would merge ${declared} into $kuzgunFile"
         else
-          zapfastSecrets=()
+          kuzgunSecrets=()
           ${lib.concatStrings (lib.mapAttrsToList readSecret cfg.secretFiles)}
-          zapfastTmp=$(mktemp "$zapfastDir/.settings.json.XXXXXX")
-          ${jq} --slurpfile __zapfastDeclared ${declared} "''${zapfastSecrets[@]}" \
-            '. * $__zapfastDeclared[0] * ($ARGS.named | del(.__zapfastDeclared) | map_values(rtrimstr("\n")))' \
-            <<< "$zapfastBase" > "$zapfastTmp"
-          chmod 600 "$zapfastTmp"
-          mv "$zapfastTmp" "$zapfastFile"
+          kuzgunTmp=$(mktemp "$kuzgunDir/.settings.json.XXXXXX")
+          ${jq} --slurpfile __kuzgunDeclared ${declared} "''${kuzgunSecrets[@]}" \
+            '. * $__kuzgunDeclared[0] * ($ARGS.named | del(.__kuzgunDeclared) | map_values(rtrimstr("\n")))' \
+            <<< "$kuzgunBase" > "$kuzgunTmp"
+          chmod 600 "$kuzgunTmp"
+          mv "$kuzgunTmp" "$kuzgunFile"
         fi
-        unset zapfastDir zapfastFile zapfastBase zapfastSecrets zapfastTmp
+        unset kuzgunDir kuzgunFile kuzgunBase kuzgunSecrets kuzgunTmp
       ''
     );
   };

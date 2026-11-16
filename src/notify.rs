@@ -320,8 +320,8 @@ const ALERT: &[u8] = include_bytes!("../assets/sounds/alert.wav");
 /// sounds go with it when the application bundle carries them.
 fn sound_file(sound: &NotificationSound) -> Option<&'static str> {
     match sound {
-        NotificationSound::Receive => Some("zapfast-receive.wav"),
-        NotificationSound::Alert => Some("zapfast-alert.wav"),
+        NotificationSound::Receive => Some("kuzgun-receive.wav"),
+        NotificationSound::Alert => Some("kuzgun-alert.wav"),
         _ => None,
     }
 }
@@ -394,7 +394,7 @@ impl<T: std::io::Read + std::io::Seek + Send + Sync> ReadSeek for T {}
 /// ("Type a message").
 pub fn locked_lines(locale: crate::i18n::Locale) -> (String, String) {
     (
-        "ZapFast".to_owned(),
+        "Kuzgun".to_owned(),
         // Translators: the body of a notification that hides who wrote and
         // what: a message has arrived.
         crate::i18n::pgettext(locale, "notification", "New message").into_owned(),
@@ -422,7 +422,7 @@ pub fn lines(
 }
 
 /// The bundle identifier packaging/macos gives the app.
-const MACOS_BUNDLE_ID: &str = "me.paolino.fastsapp";
+const MACOS_BUNDLE_ID: &str = "io.github.kaptanoguz.Kuzgun";
 
 /// The identity notifications are sent under. macOS refuses a client whose
 /// identity is not the running bundle's before it asks for permission, so a
@@ -433,7 +433,7 @@ fn notification_app_id() -> &'static str {
     if cfg!(target_os = "macos") {
         MACOS_BUNDLE_ID
     } else {
-        "me.paolino.zapfast"
+        "io.github.kaptanoguz.Kuzgun"
     }
 }
 
@@ -459,14 +459,14 @@ fn deliver(
     };
     let client = match CLIENT.get_or_init(|| {
         Client::new(
-            App::new(notification_app_id(), "ZapFast")
-                .desktop_entry("zapfast")
-                .icon("zapfast")
+            App::new(notification_app_id(), "Kuzgun")
+                .desktop_entry("io.github.kaptanoguz.Kuzgun")
+                .icon("io.github.kaptanoguz.Kuzgun")
                 // ZapFast's green, the theme's accent, behind the logo on
                 // Windows toasts, so Windows 11's dark theme leaves it as drawn.
                 .logo(
                     include_bytes!("../packaging/macos/icon-1024.png"),
-                    [0x00, 0xa8, 0x84],
+                    [0xfb, 0xf5, 0xec],
                 ),
         )
     }) {
@@ -593,7 +593,7 @@ mod tests {
 
     #[test]
     fn the_windows_shortcut_uses_the_notification_identity() {
-        let installer = include_str!("../packaging/windows/zapfast.iss");
+        let installer = include_str!("../packaging/windows/kuzgun.iss");
         let shortcuts: Vec<_> = installer
             .lines()
             .filter(|line| {
@@ -603,7 +603,7 @@ mod tests {
             .collect();
         assert_eq!(shortcuts.len(), 2);
         for shortcut in shortcuts {
-            assert!(shortcut.contains("AppUserModelID: \"me.paolino.zapfast\""));
+            assert!(shortcut.contains("AppUserModelID: \"io.github.kaptanoguz.Kuzgun\""));
         }
     }
 
@@ -801,7 +801,7 @@ mod tests {
         let mut notifications = Notifications::default();
         notifications.show(
             "Ada Lovelace".into(),
-            "A test from ZapFast, with a picture".into(),
+            "A test from Kuzgun, with a picture".into(),
             picture,
             NotificationSound::System,
             NotificationTarget {

@@ -1,23 +1,23 @@
 ---
 title: Download
-description: Get ZapFast for Linux, macOS, or Windows, with install instructions for each.
+description: Get Kuzgun for Linux, macOS, or Windows, with install instructions for each.
 nav_order: 1
 seo:
   title: Download for Linux, macOS, and Windows
 ---
 
-{% assign v = site.zapfast_version %}
+{% assign v = site.kuzgun_version %}
 {% assign name = site.release_asset_prefix %}
 {% assign app = site.release_app_name %}
-{% assign base = "https://github.com/crmne/zapfast/releases/download/v" | append: v %}
+{% assign base = "https://github.com/kaptanoguz/Kuzgun/releases/download/v" | append: v %}
 
-ZapFast was previously called FastsApp. Version 0.13.0 introduces the new
+Kuzgun was previously called FastsApp. Version 0.13.0 introduces the new
 package and executable names. Your existing session and local data move
-automatically when you first start ZapFast; quit FastsApp before upgrading.
+automatically when you first start Kuzgun; quit FastsApp before upgrading.
 
 The current version is **v{{ v }}**. SHA-256 checksums are in
 [checksums.txt]({{ base }}/checksums.txt). Older versions are on the
-[releases page](https://github.com/crmne/zapfast/releases).
+[releases page](https://github.com/kaptanoguz/Kuzgun/releases).
 
 ## Linux
 
@@ -33,20 +33,20 @@ yay -S {{ name }}-git    # builds from the latest commit
 With [Nix](https://nixos.org), install from the flake:
 
 ```sh
-nix profile install github:crmne/zapfast
+nix profile install github:kaptanoguz/Kuzgun
 ```
 
 NixOS configurations can add the repository as a flake input and include
-`inputs.zapfast.packages.${pkgs.system}.default` in
+`inputs.kuzgun.packages.${pkgs.system}.default` in
 `environment.systemPackages`.
 
 With [Home Manager](https://github.com/nix-community/home-manager), the
-flake's module installs ZapFast and declares its settings:
+flake's module installs Kuzgun and declares its settings:
 
 ```nix
-imports = [ inputs.zapfast.homeManagerModules.default ];
+imports = [ inputs.kuzgun.homeManagerModules.default ];
 
-programs.zapfast = {
+programs.kuzgun = {
   enable = true;
   settings = {
     check_for_updates = false;
@@ -61,7 +61,7 @@ every activation, so the window size, recent emoji, and lock verifiers the app
 keeps there are left alone. A declared key that is changed in the app is reset
 on the next activation. Per-account preferences such as read receipts and
 notifications live in each account's own file and cannot be declared here.
-Restart ZapFast after activating: it reads the file at
+Restart Kuzgun after activating: it reads the file at
 start, and its next save writes back the values it already had.
 
 Values in `settings` are copied to the Nix store, which every user on the
@@ -71,7 +71,7 @@ file for each key in `secretFiles`, for example one that sops-nix or agenix
 decrypts. The module reads those files when it activates:
 
 ```nix
-programs.zapfast.secretFiles.proxy = config.sops.secrets.zapfast-proxy.path;
+programs.kuzgun.secretFiles.proxy = config.sops.secrets.kuzgun-proxy.path;
 ```
 
 On Debian, Ubuntu and their derivatives, install the `.deb`; apt fetches
@@ -85,12 +85,12 @@ sudo apt install ./{{ name }}_{{ v }}_amd64.deb    # or _arm64.deb
 - [{{ name }}_{{ v }}_arm64.deb]({{ base }}/{{ name }}_{{ v }}_arm64.deb)
 
 On Fedora 44 and newer, install from the
-[COPR repository](https://copr.fedorainfracloud.org/coprs/paolino/zapfast/),
+[COPR repository](https://copr.fedorainfracloud.org/coprs/paolino/kuzgun/),
 so dnf updates {{ app }} with the rest of your system:
 
 ```sh
-sudo dnf copr enable paolino/zapfast
-sudo dnf install zapfast
+sudo dnf copr enable paolino/kuzgun
+sudo dnf install kuzgun
 ```
 
 On openSUSE and other RPM distributions, or to install one release by hand,
@@ -154,14 +154,14 @@ Open it and drag **{{ app }}** to Applications.
 If you use [Homebrew](https://brew.sh), you can install it with:
 
 ```sh
-brew install --cask crmne/tap/zapfast
+brew install --cask crmne/tap/kuzgun
 ```
 
 The app is signed with Developer ID and notarized by Apple. The DMG includes
 a validated notarization ticket.
 
 When upgrading from FastsApp, remove the old FastsApp application bundle
-after installing ZapFast.
+after installing Kuzgun.
 
 ## Windows
 

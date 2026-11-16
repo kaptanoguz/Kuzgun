@@ -109,8 +109,8 @@
             libxi
             libxrandr
           ];
-          zapfast = rustPlatform.buildRustPackage rec {
-            pname = "zapfast";
+          kuzgun = rustPlatform.buildRustPackage rec {
+            pname = "kuzgun";
             version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
             src = self;
 
@@ -163,7 +163,7 @@
               # The GUI dlopens its Wayland, X11 and GL libraries at run time.
               pkgs.lib.optionalString isLinux ''
                 find $out/bin -type f -exec remove-references-to -t ${pkgs.stdenv.cc} {} +
-                wrapProgram $out/bin/zapfast \
+                wrapProgram $out/bin/kuzgun \
                   --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath runtimeLibs}
               ''
               # Sign after the strip hook, which would invalidate the signature.
@@ -171,42 +171,44 @@
               + pkgs.lib.optionalString isDarwin ''
                 rcodesign sign \
                   --entitlements-xml-file packaging/macos/entitlements.plist \
-                  $out/Applications/ZapFast.app
+                  $out/Applications/Kuzgun.app
               '';
 
             postInstall =
               pkgs.lib.optionalString isLinux ''
-                install -Dm644 packaging/applications/zapfast.desktop \
-                  $out/share/applications/zapfast.desktop
-                install -Dm644 packaging/icons/zapfast.svg \
-                  $out/share/icons/hicolor/scalable/apps/zapfast.svg
-                install -Dm644 contrib/omarchy/zapfast.json.tpl \
-                  $out/share/zapfast/omarchy/zapfast.json.tpl
-                install -Dm755 contrib/omarchy/zapfast-theme \
-                  $out/share/zapfast/omarchy/zapfast-theme
+                install -Dm644 packaging/applications/io.github.kaptanoguz.Kuzgun.desktop \
+                  $out/share/applications/io.github.kaptanoguz.Kuzgun.desktop
+                install -Dm644 packaging/icons/kuzgun.svg \
+                  $out/share/icons/hicolor/scalable/apps/io.github.kaptanoguz.Kuzgun.svg
+                install -Dm644 packaging/icons/kuzgun-symbolic.svg \
+                  $out/share/icons/hicolor/symbolic/apps/io.github.kaptanoguz.Kuzgun-symbolic.svg
+                install -Dm644 contrib/omarchy/kuzgun.json.tpl \
+                  $out/share/kuzgun/omarchy/kuzgun.json.tpl
+                install -Dm755 contrib/omarchy/kuzgun-theme \
+                  $out/share/kuzgun/omarchy/kuzgun-theme
               ''
-              # Mirrors packaging/macos/bundle.sh: ZapFast.app around the built
+              # Mirrors packaging/macos/bundle.sh: Kuzgun.app around the built
               # binary, with the version stripped of any prerelease suffix.
               + pkgs.lib.optionalString isDarwin ''
-                app=$out/Applications/ZapFast.app
+                app=$out/Applications/Kuzgun.app
                 mkdir -p $app/Contents/MacOS $app/Contents/Resources
-                mv $out/bin/zapfast $app/Contents/MacOS/zapfast
-                chmod 755 $app/Contents/MacOS/zapfast
+                mv $out/bin/kuzgun $app/Contents/MacOS/kuzgun
+                chmod 755 $app/Contents/MacOS/kuzgun
                 # The command runs the bundled executable, so macOS applies the
                 # bundle's Info.plist and entitlements, and start at login
                 # records the bundled path.
-                makeWrapper $app/Contents/MacOS/zapfast $out/bin/zapfast
+                makeWrapper $app/Contents/MacOS/kuzgun $out/bin/kuzgun
                 sed "s/__VERSION__/''${version%%-*}/g" packaging/macos/Info.plist \
                   > $app/Contents/Info.plist
                 icnsify packaging/macos/icon-1024.png \
-                  --output $app/Contents/Resources/zapfast.icns
+                  --output $app/Contents/Resources/kuzgun.icns
               '';
 
             meta = {
               description = "Fast native WhatsApp client";
-              homepage = "https://zapfast.rocks";
+              homepage = "https://github.com/kaptanoguz/Kuzgun";
               license = with pkgs.lib.licenses; [ mit gpl2Only ];
-              mainProgram = "zapfast";
+              mainProgram = "kuzgun";
               # The flake publishes only aarch64-darwin. Older nixpkgs, for
               # example through follows, still list x86_64-darwin.
               platforms = pkgs.lib.platforms.linux ++ [ "aarch64-darwin" ];
@@ -214,14 +216,14 @@
           };
         in
         {
-          default = zapfast;
-          inherit zapfast;
+          default = kuzgun;
+          inherit kuzgun;
         }
       );
 
       homeManagerModules = {
-        default = self.homeManagerModules.zapfast;
-        zapfast = import ./nix/home-manager.nix self;
+        default = self.homeManagerModules.kuzgun;
+        kuzgun = import ./nix/home-manager.nix self;
       };
 
       formatter = forAllSystems (pkgs: pkgs.nixfmt-tree);

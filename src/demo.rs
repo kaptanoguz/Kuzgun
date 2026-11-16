@@ -6210,7 +6210,7 @@ mod tests {
             .filter_map(|(_, node)| node.label().or_else(|| node.value()))
             .collect();
         assert!(
-            !labels.contains(&"Locked chats are read-only in ZapFast"),
+            !labels.contains(&"Locked chats are read-only in Kuzgun"),
             "{labels:?}"
         );
         assert!(!labels.contains(&"admins"));
@@ -22165,7 +22165,10 @@ mod tests {
                     }),
             );
         }
-        assert_eq!(opened, ["https://zapfast.rocks/themes/"]);
+        assert_eq!(
+            opened,
+            ["https://github.com/kaptanoguz/Kuzgun/blob/main/docs/_guide/themes.md"]
+        );
     }
 
     /// The chat list is one clickable surface: each row starts where the one

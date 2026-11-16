@@ -3,7 +3,7 @@
 //! The crate holds the lock in the per-user runtime directory and serves the
 //! private channel a later launch hands its request over (a socket only the
 //! user can open, or a token-checked loopback port on Windows). ZapFast keeps
-//! its verbs, its directory, and the `fastsapp:` prefix, so a new launch still
+//! its verbs, its directory, and the `kuzgun:` prefix, so a new launch still
 //! reaches an older copy that is already running, and an older launch this
 //! one. Copies from before the lock (0.15 and earlier) only know a fixed
 //! port, which this module still answers.
@@ -16,14 +16,15 @@ use std::time::{Duration, Instant};
 
 /// Stable wire identity shared with FastsApp so upgrades surface a running
 /// older copy before migrating its session files. On the wire every request
-/// and reply starts with `fastsapp:`.
-const NAME: &str = "fastsapp";
-const PREFIX: &str = "fastsapp:";
-/// What ZapFast answers a request it takes: `fastsapp:ok` on the wire.
+/// and reply starts with `kuzgun:`.
+const NAME: &str = "kuzgun";
+const PREFIX: &str = "kuzgun:";
+/// What ZapFast answers a request it takes: `kuzgun:ok` on the wire.
 const OK: &str = "ok";
 
 /// Fixed port of copies that predate the lock. They never take it.
-const LEGACY_PORT: u16 = 47_119;
+/// Not ZapFast's 47119, so the two apps can run at the same time.
+const LEGACY_PORT: u16 = 47_823;
 /// Longest request accepted on the legacy port.
 const LEGACY_REQUEST_LIMIT: usize = 256;
 /// Time a client gets to send its whole request on the legacy port.
@@ -274,7 +275,7 @@ fn legacy_request(mut stream: TcpStream, verb: &str) -> std::io::Result<()> {
     } else {
         Err(std::io::Error::new(
             std::io::ErrorKind::InvalidData,
-            "the port is held by something other than ZapFast",
+            "the port is held by something other than Kuzgun",
         ))
     }
 }
@@ -438,8 +439,8 @@ mod tests {
                     continue;
                 }
                 let line = line.trim_end().to_owned();
-                if line == "fastsapp:show" {
-                    let _ = (&stream).write_all(b"fastsapp:ok\n");
+                if line == "kuzgun:show" {
+                    let _ = (&stream).write_all(b"kuzgun:ok\n");
                 }
                 record.lock().unwrap().push(line);
             }
@@ -447,7 +448,7 @@ mod tests {
         let outcome = acquire(&dir, &crate::backend::Waker::default(), INVITE);
         assert!(matches!(outcome, Outcome::Outdated));
         let seen = seen.lock().unwrap();
-        assert_eq!(seen.last().map(String::as_str), Some("fastsapp:show"));
+        assert_eq!(seen.last().map(String::as_str), Some("kuzgun:show"));
         assert!(seen.iter().any(|line| line == &format!("{PREFIX}{INVITE}")));
         drop(lock);
     }
@@ -527,7 +528,7 @@ mod tests {
 
     /// A second launch reaches the first, whether it is this version or one
     /// from before fastframe-instance, which writes and expects the same
-    /// lines: `fastsapp:show` in, `fastsapp:ok` out. Themes reload without a
+    /// lines: `kuzgun:show` in, `kuzgun:ok` out. Themes reload without a
     /// window. Unknown verbs are declined, and on Windows a wrong token gets
     /// no reply.
     #[test]
@@ -555,15 +556,15 @@ mod tests {
         ));
 
         // A launch of an older version.
-        assert_eq!(raw_request(&dir, "fastsapp:show", None), "fastsapp:ok\n");
+        assert_eq!(raw_request(&dir, "kuzgun:show", None), "kuzgun:ok\n");
         assert_eq!(
-            raw_request(&dir, "fastsapp:frobnicate", None),
-            "fastsapp!declined\n",
+            raw_request(&dir, "kuzgun:frobnicate", None),
+            "kuzgun!declined\n",
             "which an older copy reads as no answer"
         );
         #[cfg(not(unix))]
         assert_eq!(
-            raw_request(&dir, "fastsapp:show", Some(&"0".repeat(64))),
+            raw_request(&dir, "kuzgun:show", Some(&"0".repeat(64))),
             "",
             "a wrong token is refused"
         );
