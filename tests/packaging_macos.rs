@@ -18,7 +18,7 @@ fn packaging(file: &str) -> String {
 fn the_bundle_carries_the_agent_that_starts_in_the_tray() {
     // The identifier from before the rename, which the linked device and the
     // keychain entries still go by.
-    let id = "me.paolino.fastsapp";
+    let id = "io.github.kaptanoguz.Kuzgun";
     assert!(packaging("Info.plist").contains(&format!("<string>{id}</string>")));
     assert_eq!(
         packaging("autostart.plist"),

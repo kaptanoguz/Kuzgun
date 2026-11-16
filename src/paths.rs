@@ -18,17 +18,25 @@ pub struct AppDirs {
     pub runtime: PathBuf,
 }
 
+/// Linux directory name (`~/.config/kuzgun` and the matching data and cache
+/// directories). The qualifier and organization select the macOS and Windows
+/// locations: `~/Library/Application Support/io.github.kaptanoguz.kuzgun` and
+/// `%APPDATA%\kaptanoguz\kuzgun`.
+const DIR_NAME: &str = "kuzgun";
+const DIR_QUALIFIER: &str = "io.github";
+const DIR_ORGANIZATION: &str = "kaptanoguz";
+
 impl AppDirs {
     pub fn discover() -> Self {
-        match Self::of("zapfast") {
+        match Self::of(DIR_NAME) {
             Some(dirs) => dirs,
             None => {
                 let fallback = std::env::current_dir().unwrap_or_default();
                 Self {
-                    config: fallback.join("zapfast-config"),
-                    state: fallback.join("zapfast-state"),
-                    cache: fallback.join("zapfast-cache"),
-                    runtime: fallback.join("zapfast-run"),
+                    config: fallback.join("kuzgun-config"),
+                    state: fallback.join("kuzgun-state"),
+                    cache: fallback.join("kuzgun-cache"),
+                    runtime: fallback.join("kuzgun-run"),
                 }
             }
         }
@@ -36,7 +44,11 @@ impl AppDirs {
 
     /// Standard platform directories for the app.
     fn of(name: &str) -> Option<Self> {
-        let project = ProjectDirs::from("me", "paolino", name)?;
+        Self::from_project(DIR_QUALIFIER, DIR_ORGANIZATION, name)
+    }
+
+    fn from_project(qualifier: &str, organization: &str, application: &str) -> Option<Self> {
+        let project = ProjectDirs::from(qualifier, organization, application)?;
         let state = project
             .state_dir()
             .map(|path| path.to_path_buf())
@@ -51,15 +63,52 @@ impl AppDirs {
 
     /// Adopts earlier names, newest first, without replacing existing data.
     /// Call only after acquiring the instance guard, and never for demo runs.
+    ///
+    /// ZapFast's directories move when Kuzgun's do not exist yet, so a paired
+    /// session and its archive come across. Archive keys are copied to the
+    /// new paths before anything is renamed.
     pub fn adopt_previous_names(&self) -> std::io::Result<()> {
-        for name in ["fastsapp", "fastwhatsapp"] {
-            if let Some(old) = Self::of(name) {
+        self.adopt_legacy(
+            [
+                ("me", "paolino", "zapfast"),
+                ("me", "paolino", "fastsapp"),
+                ("me", "paolino", "fastwhatsapp"),
+            ],
+            crate::archive::rehome_archive_key,
+        )
+    }
+
+    fn adopt_legacy(
+        &self,
+        previous: [(&str, &str, &str); 3],
+        rehome: impl Fn(&Path, &Path) -> anyhow::Result<()>,
+    ) -> std::io::Result<()> {
+        for (qualifier, organization, name) in previous {
+            if let Some(old) = Self::from_project(qualifier, organization, name) {
+                // A Kuzgun directory that already exists keeps its own data.
+                if !self.state.exists() {
+                    self.rehome_archives(&old, &rehome)?;
+                }
                 self.adopt(&old)?;
             }
             if let (Some(from), Some(to)) =
-                (eframe::storage_dir(name), eframe::storage_dir("zapfast"))
+                (eframe::storage_dir(name), eframe::storage_dir(DIR_NAME))
             {
                 adopt_directory(&from, &to)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Copies each archive's keyring key onto the path the move will give it.
+    fn rehome_archives(
+        &self,
+        old: &Self,
+        rehome: &impl Fn(&Path, &Path) -> anyhow::Result<()>,
+    ) -> std::io::Result<()> {
+        for (from, to) in archive_pairs(&old.state, &self.state) {
+            if from.is_file() && !to.exists() {
+                rehome(&from, &to).map_err(|error| std::io::Error::other(format!("{error:#}")))?;
             }
         }
         Ok(())
@@ -162,7 +211,7 @@ impl AppDirs {
         if !pending.is_empty() && dest.session_db().exists() {
             log::warn!(
                 "single-account files beside a linked account folder are left alone: an older \
-                 ZapFast may still be installed"
+                 Kuzgun may still be installed"
             );
             return Ok(());
         }
@@ -204,7 +253,7 @@ impl AppDirs {
             return Err(std::io::Error::new(
                 std::io::ErrorKind::AlreadyExists,
                 format!(
-                    "{} holds a single-account setup, but {} already exists. Nothing was moved; move one of them away and start ZapFast again",
+                    "{} holds a single-account setup, but {} already exists. Nothing was moved; move one of them away and start Kuzgun again",
                     self.state.display(),
                     blocked[0].display()
                 ),
@@ -242,7 +291,7 @@ impl AppDirs {
 
     /// Current-run log, replaced at startup.
     pub fn log_file(&self) -> PathBuf {
-        self.state.join("zapfast.log")
+        self.state.join("kuzgun.log")
     }
 
     /// Panic log written before process exit.
@@ -398,21 +447,29 @@ fn restrict_directory(_path: &Path) -> std::io::Result<()> {
 /// beside the state directory rather than inside it, because the state
 /// directory must not exist before an earlier name's data is adopted.
 fn runtime_dir(project: &ProjectDirs, state: &Path) -> PathBuf {
-    // Flatpak gives each sandbox a private runtime directory and shares only
-    // this one between instances of the app.
-    #[cfg(target_os = "linux")]
-    if let (Some(runtime), Some(id)) = (
-        project.runtime_dir().and_then(Path::parent),
-        std::env::var_os("FLATPAK_ID"),
-    ) {
-        return runtime.join("app").join(id);
-    }
     if let Some(runtime) = project.runtime_dir() {
         return runtime.to_path_buf();
     }
     let mut name = state.file_name().unwrap_or_default().to_os_string();
     name.push(".run");
     state.with_file_name(name)
+}
+
+/// Archives at the state root and under `accounts/<id>/`, paired with the
+/// path each one will have after the state directory moves.
+fn archive_pairs(old_state: &Path, new_state: &Path) -> Vec<(PathBuf, PathBuf)> {
+    let mut pairs = vec![(old_state.join("archive.db"), new_state.join("archive.db"))];
+    let accounts = old_state.join("accounts");
+    if let Ok(entries) = std::fs::read_dir(&accounts) {
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            pairs.push((
+                entry.path().join("archive.db"),
+                new_state.join("accounts").join(name).join("archive.db"),
+            ));
+        }
+    }
+    pairs
 }
 
 /// Rename whole directories so SQLite databases travel with their WAL files.
@@ -752,6 +809,111 @@ mod tests {
             b"another history"
         );
         assert!(!account.session_db().exists());
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    /// ZapFast's config, state and cache move into Kuzgun's directories when
+    /// those do not exist yet, including an account archive, and a second
+    /// launch leaves the result alone.
+    #[test]
+    fn zapfast_directories_move_when_kuzgun_directories_are_absent() {
+        let root = root("adopt-zapfast");
+        let old = AppDirs::under(&root.join("zapfast"));
+        let new = AppDirs::under(&root.join("kuzgun"));
+        old.ensure().unwrap();
+        let account = old.account(&AccountId::first());
+        account.ensure().unwrap();
+        for path in [
+            old.settings_file(),
+            account.session_db(),
+            account.archive_db(),
+            account.state.join("archive.db-wal"),
+            old.saved_sticker_dir().join("pack/sticker.webp"),
+            account.media_cache_dir().join("photo.jpg"),
+        ] {
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(&path, b"preserved").unwrap();
+        }
+        let seen = std::sync::Mutex::new(Vec::new());
+        new.rehome_archives(&old, &|from, to| {
+            seen.lock()
+                .unwrap()
+                .push((from.to_path_buf(), to.to_path_buf()));
+            Ok(())
+        })
+        .unwrap();
+        new.adopt(&old).unwrap();
+        let account = new.account(&AccountId::first());
+        for path in [
+            new.settings_file(),
+            account.session_db(),
+            account.archive_db(),
+            account.state.join("archive.db-wal"),
+            new.saved_sticker_dir().join("pack/sticker.webp"),
+            account.media_cache_dir().join("photo.jpg"),
+        ] {
+            assert_eq!(
+                std::fs::read(&path).unwrap(),
+                b"preserved",
+                "{}",
+                path.display()
+            );
+        }
+        assert!(!old.state.exists());
+        let moved = seen.lock().unwrap().clone();
+        assert!(
+            moved
+                .iter()
+                .any(|(from, _)| from.ends_with("accounts/1/archive.db")),
+            "the account archive's key is rehomed: {moved:?}"
+        );
+        // A second launch finds nothing left to move.
+        new.rehome_archives(&old, &|_, _| panic!("nothing to rehome"))
+            .unwrap();
+        new.adopt(&old).unwrap();
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn existing_kuzgun_data_is_not_replaced_by_zapfast() {
+        let root = root("keep-kuzgun");
+        let old = AppDirs::under(&root.join("zapfast"));
+        let new = AppDirs::under(&root.join("kuzgun"));
+        old.ensure().unwrap();
+        new.ensure().unwrap();
+        std::fs::write(old.settings_file(), b"zapfast settings").unwrap();
+        std::fs::write(old.archive_db(), b"zapfast archive").unwrap();
+        std::fs::write(new.settings_file(), b"kuzgun settings").unwrap();
+        std::fs::write(new.archive_db(), b"kuzgun archive").unwrap();
+        new.rehome_archives(&old, &|_, _| {
+            panic!("the destination archive already exists")
+        })
+        .unwrap();
+        new.adopt(&old).unwrap();
+        assert_eq!(
+            std::fs::read(new.settings_file()).unwrap(),
+            b"kuzgun settings"
+        );
+        assert_eq!(std::fs::read(new.archive_db()).unwrap(), b"kuzgun archive");
+        assert_eq!(std::fs::read(old.archive_db()).unwrap(), b"zapfast archive");
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn a_refused_key_leaves_the_zapfast_archive_where_it_is() {
+        let root = root("key-blocks-move");
+        let old = AppDirs::under(&root.join("zapfast"));
+        let new = AppDirs::under(&root.join("kuzgun"));
+        old.ensure().unwrap();
+        std::fs::write(old.session_db(), b"session").unwrap();
+        std::fs::write(old.archive_db(), b"encrypted pages").unwrap();
+        let error = new
+            .rehome_archives(&old, &|_, _| anyhow::bail!("keyring locked"))
+            .unwrap_err();
+        assert!(error.to_string().contains("keyring locked"), "{error}");
+        assert_eq!(std::fs::read(old.archive_db()).unwrap(), b"encrypted pages");
+        assert_eq!(std::fs::read(old.session_db()).unwrap(), b"session");
+        assert!(!new.state.exists());
         std::fs::remove_dir_all(root).unwrap();
     }
 }

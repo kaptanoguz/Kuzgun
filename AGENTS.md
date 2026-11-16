@@ -348,13 +348,13 @@ protocol. These notes are for coding agents and new contributors.
   `fastframe_update::intercept` before anything else, so `--apply-update`,
   `--update-receipt` and `--update-error` keep working with older releases'
   helpers (`tests/update_flags.rs`). Portable releases carry
-  `packaging/zapfast-portable.txt`; the Windows installer has its own marker.
+  `packaging/kuzgun-portable.txt`; the Windows installer has its own marker.
 - Custom themes come from fastframe-theme (`theme::Catalog`, ZapFast's
   `fastframe_theme::Palette` impl in `src/theme.rs`): it scans local JSON
   palettes off the UI thread, and the app caches the last usable choice in
   settings, with the palettes shared with Spotifast embedded as defaults. On Linux filesystem notifications reload the catalog and the active
   Omarchy palette without a repaint timer; following Omarchy does not require
-  packaged assets. Changing `contrib/omarchy/zapfast.json.tpl` means saving the
+  packaged assets. Changing `contrib/omarchy/kuzgun.json.tpl` means saving the
   old text in `contrib/omarchy/previous/` and listing it in
   `omarchy_previous_templates`, so untouched installed copies are upgraded. Native packages ship optional hooks and templates, preserving
   existing per-user files. `reload-themes` uses the single-instance channel
@@ -759,7 +759,7 @@ released, which goes out as soon as it is fixed.
 A release is not finished when the tag is pushed. Do these in order:
 
 1. From a clean, up-to-date `main`, bump `version` in `Cargo.toml`, add the
-   release to the `<releases>` list in the Flatpak metainfo, and update
+   release to the `<releases>` list in the AppStream metainfo, and update
    `Cargo.lock` with a build. Write the release notes, in the style above, to
    `packaging/release-notes/vX.Y.Z.md`: the release workflow publishes that
    file as the release description, and a stable tag without it fails. Link
@@ -784,13 +784,8 @@ A release is not finished when the tag is pushed. Do these in order:
    download page offers the new version and every download link loads. Set
    `release_asset_prefix` to `zapfast` and `release_app_name` to `ZapFast`
    only once those assets exist.
-5. Update the AUR packages from the templates in `packaging/arch/`. The shared
-   packaging workflow generates versions, hashes and `.SRCINFO` after the
-   release exists, and publishes when `PUBLISH_AUR` and the required secrets
-   are configured. Otherwise use `native-packages` to build, stage,
-   review and publish the generated recipes; see `PACKAGING.md`. Validate
-   native builds with `makepkg -f`. A recipe-only `zapfast-git` change does
-   not require an application release.
+5. The Linux package is the `.deb` the packaging workflow builds from the
+   release tarball. See `PACKAGING.md`.
 
 ## Definition of done
 

@@ -2852,7 +2852,7 @@ mod tests {
 
     /// The balloon grows with the text it holds: at twice the scale, a body
     /// twice the size has a tail reaching twice as far and four times the
-    /// area. ZapFast's scale is its text size over Messages' 13 points.
+    /// area. Kuzgun's scale is its text size over Messages' 13 points.
     #[test]
     fn messages_balloons_scale_with_text_size() {
         assert_eq!(MESSAGES_SCALE, MESSAGE_TEXT_SIZE / MESSAGES_TEXT_SIZE);

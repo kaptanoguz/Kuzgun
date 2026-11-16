@@ -579,7 +579,7 @@ fn banner(app: &mut App, ui: &mut egui::Ui) {
             let update = update.as_ref().expect("checked above");
             (
                 Icon::Info,
-                crate::i18n::gettext(app.locale, "ZapFast {version} is available")
+                crate::i18n::gettext(app.locale, "Kuzgun {version} is available")
                     .replace("{version}", &update.version),
                 palette.accent,
                 false,

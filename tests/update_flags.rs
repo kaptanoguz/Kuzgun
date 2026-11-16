@@ -11,7 +11,7 @@ use std::process::{Command, Output};
 
 /// Runs the built executable with every per-user location inside `home`.
 fn zapfast(home: &Path, arguments: &[&str]) -> Output {
-    let mut command = Command::new(env!("CARGO_BIN_EXE_zapfast"));
+    let mut command = Command::new(env!("CARGO_BIN_EXE_kuzgun"));
     command.args(arguments).env_remove("RUST_LOG");
     for variable in [
         "HOME",
@@ -71,7 +71,7 @@ fn update_receipt_and_error_are_taken_off_the_command_line() {
     assert!(output.status.success(), "stderr: {stderr}");
     assert_eq!(
         stdout.trim(),
-        format!("zapfast {}", env!("CARGO_PKG_VERSION")),
+        format!("kuzgun {}", env!("CARGO_PKG_VERSION")),
         "stderr: {stderr}"
     );
     assert_eq!(entries(home.path()), Vec::<String>::new());

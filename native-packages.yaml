@@ -9,46 +9,92 @@ tool:
 libraries:
   libasound.so.2:
     deb: libasound2t64 | libasound2
-    rpm: alsa-lib
   libpipewire-0.3.so.0:
     deb: libpipewire-0.3-0t64 | libpipewire-0.3-0
-    rpm: pipewire-libs
 nfpm:
-  name: zapfast
+  name: kuzgun
   maintainer: Carmine Paolino <carmine@paolino.me>
-  homepage: https://zapfast.rocks
+  homepage: https://github.com/kaptanoguz/Kuzgun
   description: Fast native WhatsApp client
   license: MIT
   provides: [fastsapp]
   conflicts: [fastsapp]
   replaces: [fastsapp]
   contents:
-  - src: "@PAYLOAD@/zapfast-v@VERSION@-@TARGET@/zapfast"
-    dst: "/usr/bin/zapfast"
+  - src: "@PAYLOAD@/kuzgun-v@VERSION@-@TARGET@/kuzgun"
+    dst: "/usr/bin/kuzgun"
     file_info:
       mode: 493
-  - src: "@PAYLOAD@/zapfast-v@VERSION@-@TARGET@/LICENSE"
-    dst: "/usr/share/licenses/zapfast/LICENSE"
+  - src: LICENSE
+    dst: /usr/share/licenses/kuzgun/LICENSE
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/zapfast-v@VERSION@-@TARGET@/README.md"
-    dst: "/usr/share/doc/zapfast/README.md"
+  - src: README.md
+    dst: /usr/share/doc/kuzgun/README.md
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/zapfast-v@VERSION@-@TARGET@/packaging/applications/zapfast.desktop"
-    dst: "/usr/share/applications/zapfast.desktop"
+  - src: THIRD-PARTY-NOTICES.md
+    dst: /usr/share/licenses/kuzgun/THIRD-PARTY-NOTICES.md
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/zapfast-v@VERSION@-@TARGET@/packaging/icons/zapfast.svg"
-    dst: "/usr/share/icons/hicolor/scalable/apps/zapfast.svg"
+  - src: packaging/applications/io.github.kaptanoguz.Kuzgun.desktop
+    dst: /usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop
     file_info:
       mode: 420
-  - src: contrib/omarchy/zapfast.json.tpl
-    dst: /usr/share/zapfast/omarchy/zapfast.json.tpl
+  - src: packaging/metainfo/io.github.kaptanoguz.Kuzgun.metainfo.xml
+    dst: /usr/share/metainfo/io.github.kaptanoguz.Kuzgun.metainfo.xml
     file_info:
       mode: 420
-  - src: contrib/omarchy/zapfast-theme
-    dst: /usr/share/zapfast/omarchy/zapfast-theme
+  - src: packaging/icons/kuzgun.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/io.github.kaptanoguz.Kuzgun.svg
+    file_info:
+      mode: 420
+  - src: packaging/icons/kuzgun-symbolic.svg
+    dst: /usr/share/icons/hicolor/symbolic/apps/io.github.kaptanoguz.Kuzgun-symbolic.svg
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/16x16/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/16x16/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/22x22/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/22x22/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/24x24/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/24x24/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/32x32/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/32x32/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/48x48/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/48x48/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/64x64/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/64x64/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/128x128/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/128x128/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/256x256/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/256x256/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/512x512/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/512x512/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: contrib/omarchy/kuzgun.json.tpl
+    dst: /usr/share/kuzgun/omarchy/kuzgun.json.tpl
+    file_info:
+      mode: 420
+  - src: contrib/omarchy/kuzgun-theme
+    dst: /usr/share/kuzgun/omarchy/kuzgun-theme
     file_info:
       mode: 493
   # native-packages adds the C library (libc6, glibc) at the version the
@@ -72,33 +118,13 @@ nfpm:
       - libpipewire-0.3-0t64 | libpipewire-0.3-0
       - libgcc-s1
       - libstdc++6
-    rpm:
-      depends:
-      - libglvnd-glx
-      - libglvnd-egl
-      - libxkbcommon
-      - libxkbcommon-x11
-      - libwayland-client
-      - libwayland-cursor
-      - libwayland-egl
-      - libX11
-      - libX11-xcb
-      - libXcursor
-      - libXi
-      - libXrandr
-      - alsa-lib
-      - pipewire-libs
-      - libgcc
-      - libstdc++
-  rpm:
-    buildhost: github-actions
 # Windows code and installers are signed through Azure Artifact Signing as
 # PlentyLabs when the windows-signing environment provides the account
 # (PACKAGING.md, "Windows signing").
 windows:
   signing:
     provider: azure-artifact-signing
-    description: ZapFast
+    description: Kuzgun
     publisher: PlentyLabs UG (haftungsbeschränkt) & Co. KG
 targets:
   macos-universal:
@@ -110,7 +136,7 @@ targets:
       local: dist/macos-input
     native:
       command: [ruby, packaging/macos/dmg.rb, '@PAYLOAD@', '@PACKAGE@']
-      output: 'zapfast-@TAG@-macos-universal.dmg'
+      output: 'kuzgun-@TAG@-macos-universal.dmg'
   windows-amd64:
     platform: windows
     arch: amd64
@@ -120,7 +146,7 @@ targets:
       local: dist/windows-input-x86_64-pc-windows-msvc
     native:
       command: [ruby, packaging/windows/msi.rb, '@PAYLOAD@', '@PACKAGE@', '@VERSION@']
-      output: 'zapfast-@TAG@-x86_64-pc-windows-msvc.msi'
+      output: 'kuzgun-@TAG@-x86_64-pc-windows-msvc.msi'
   windows-arm64:
     platform: windows
     arch: arm64
@@ -130,7 +156,7 @@ targets:
       local: dist/windows-input-aarch64-pc-windows-msvc
     native:
       command: [ruby, packaging/windows/msi.rb, '@PAYLOAD@', '@PACKAGE@', '@VERSION@']
-      output: 'zapfast-@TAG@-aarch64-pc-windows-msvc.msi'
+      output: 'kuzgun-@TAG@-aarch64-pc-windows-msvc.msi'
   linux-amd64:
     platform: linux
     arch: amd64
@@ -138,11 +164,9 @@ targets:
     compiler_target: x86_64-unknown-linux-gnu
     formats:
     - deb
-    - rpm
-    - appimage
     input:
-      local: dist/zapfast-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
-      release_asset: zapfast-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
+      local: dist/kuzgun-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
+      release_asset: kuzgun-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
   linux-arm64:
     platform: linux
     arch: arm64
@@ -150,38 +174,30 @@ targets:
     compiler_target: aarch64-unknown-linux-gnu
     formats:
     - deb
-    - rpm
-    - appimage
     input:
-      local: dist/zapfast-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
-      release_asset: zapfast-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
+      local: dist/kuzgun-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
+      release_asset: kuzgun-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
 release:
-  repository: crmne/zapfast
+  repository: kaptanoguz/Kuzgun
   checksums: checksums.txt
   prereleases: true
 assets:
   AMD64:
-    file: zapfast-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
-    local: dist/zapfast-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
+    file: kuzgun-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
+    local: dist/kuzgun-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
   ARM64:
-    file: zapfast-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
-    local: dist/zapfast-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
+    file: kuzgun-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
+    local: dist/kuzgun-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
   MACOS:
-    file: zapfast-v@VERSION@-macos-universal.dmg
-    local: dist/zapfast-v@VERSION@-macos-universal.dmg
+    file: kuzgun-v@VERSION@-macos-universal.dmg
+    local: dist/kuzgun-v@VERSION@-macos-universal.dmg
   SOURCE:
-    file: zapfast-@VERSION@.tar.gz
-    url: https://github.com/crmne/zapfast/archive/refs/tags/v@VERSION@.tar.gz
+    file: kuzgun-@VERSION@.tar.gz
+    url: https://github.com/kaptanoguz/Kuzgun/archive/refs/tags/v@VERSION@.tar.gz
     checksummed: false
-    local: dist/zapfast-@VERSION@.tar.gz
+    local: dist/kuzgun-@VERSION@.tar.gz
 templates:
-  homebrew/zapfast.rb: packaging/homebrew/zapfast.rb.in
-  arch/zapfast/PKGBUILD: packaging/arch/zapfast/PKGBUILD.in
-  arch/zapfast/zapfast.install: packaging/arch/zapfast.install
-  arch/zapfast-bin/PKGBUILD: packaging/arch/zapfast-bin/PKGBUILD.in
-  arch/zapfast-bin/zapfast-bin.install: packaging/arch/zapfast.install
-  arch/zapfast-git/PKGBUILD: packaging/arch/zapfast-git/PKGBUILD.in
-  arch/zapfast-git/zapfast-git.install: packaging/arch/zapfast.install
+  homebrew/kuzgun.rb: packaging/homebrew/kuzgun.rb.in
 repositories:
   homebrew:
     url: https://github.com/crmne/homebrew-tap.git
@@ -189,41 +205,8 @@ repositories:
     branch: main
     package_path: Casks
     files:
-      homebrew/zapfast.rb: Casks/zapfast.rb
-    version_file: Casks/zapfast.rb
+      homebrew/kuzgun.rb: Casks/kuzgun.rb
+    version_file: Casks/kuzgun.rb
     version_pattern: 'version "([^"]+)"'
-    publish: push
-  aur-source:
-    group: aur
-    url: https://aur.archlinux.org/zapfast.git
-    push_url: ssh://aur@aur.archlinux.org/zapfast.git
-    branch: master
-    package_path: "."
-    files:
-      arch/zapfast: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  aur-bin:
-    group: aur
-    url: https://aur.archlinux.org/zapfast-bin.git
-    push_url: ssh://aur@aur.archlinux.org/zapfast-bin.git
-    branch: master
-    package_path: "."
-    files:
-      arch/zapfast-bin: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  aur-git:
-    group: aur
-    url: https://aur.archlinux.org/zapfast-git.git
-    push_url: ssh://aur@aur.archlinux.org/zapfast-git.git
-    branch: master
-    package_path: "."
-    files:
-      arch/zapfast-git: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
     publish: push
 version_file: Cargo.toml

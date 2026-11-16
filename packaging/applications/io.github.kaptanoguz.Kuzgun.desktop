@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Application
+Name=Kuzgun
+GenericName=WhatsApp Client
+Comment=A native WhatsApp client
+Exec=kuzgun %U
+Icon=io.github.kaptanoguz.Kuzgun
+Terminal=false
+Categories=Network;InstantMessaging;Chat;
+Keywords=whatsapp;chat;messaging;
+StartupWMClass=io.github.kaptanoguz.Kuzgun
+MimeType=x-scheme-handler/whatsapp;x-scheme-handler/wa;
+SingleMainWindow=true
+Actions=quit;
+
+[Desktop Action quit]
+Name=Quit Kuzgun
+Exec=kuzgun quit

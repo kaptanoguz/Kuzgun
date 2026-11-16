@@ -36,7 +36,7 @@ fn main() {
     let submenu = menu
         .itemAtIndex(0)
         .and_then(|item| item.submenu())
-        .expect("the ZapFast menu");
+        .expect("the Kuzgun menu");
     let index = (0..submenu.numberOfItems())
         .find(|&index| {
             submenu

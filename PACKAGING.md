@@ -1,13 +1,13 @@
 # Packaging
 
 [`native-packages.yaml`](native-packages.yaml) is the packaging configuration:
-it pins the shared CLI and nFPM versions and declares Linux amd64/arm64 inputs,
-DEB/RPM/AppImage contents, dependencies, recipe templates and downstream repositories.
+it pins the shared CLI and nFPM versions and declares the Linux `.deb`
+contents, dependencies, and the macOS Homebrew recipe.
 Application assets and native recipes stay in `packaging/`.
 
-Version 0.13.0 introduces the ZapFast name and `zapfast` binary. Its AUR recipes
+Version 0.13.0 introduces the Kuzgun name and `kuzgun` binary. Its AUR recipes
 provide and replace the corresponding FastsApp packages. The GitHub repository is
-`crmne/zapfast`, so source archives extract into `zapfast-VERSION`. Use the
+`kaptanoguz/Kuzgun`, so source archives extract into `kuzgun-VERSION`. Use the
 configuration from the matching tag to rebuild an older FastsApp release.
 Existing release files keep their original names.
 
@@ -19,9 +19,7 @@ native-packages build --release v1.2.3 --target linux-amd64 --target linux-arm64
 ```
 
 Replace `v1.2.3` with an existing stable application release. Local use also
-requires nFPM 2.47.0, `bsdtar`, `readelf` and, for the AppImage,
-`mksquashfs` (squashfs-tools); AUR generation needs `makepkg`
-or Docker. CI installs its tooling. To package local release archives, put
+requires nFPM 2.47.0, `bsdtar` and `readelf`. CI installs its tooling. To package local release archives, put
 every configured input and recipe asset under `dist/`, then run
 `native-packages build --version 1.2.3 --target linux-amd64 --target linux-arm64`. Outputs go to
 `dist/packages/1.2.3`; use `--output` for a fresh destination when rebuilding.
@@ -49,7 +47,7 @@ AUR automation needs `PUBLISH_AUR=true`, `AUR_SSH_KEY` and `AUR_KNOWN_HOSTS`;
 Homebrew automation needs `PUBLISH_HOMEBREW=true` and
 `HOMEBREW_TAP_GITHUB_TOKEN`. Enable only configured destinations.
 
-The native macOS configuration, Windows and Flatpak build steps remain responsible
+The native macOS configuration and Windows build steps remain responsible
 for their native artifacts. Additional nFPM formats require suitable platform
 inputs and dependencies; adding a format does not port the application.
 See the [shared CLI documentation](https://github.com/crmne/native-packages/tree/v0.8.1)
@@ -112,27 +110,27 @@ recipe generation to the Linux packaging job after release assets exist.
 ## Windows installer
 
 Windows releases ship the portable zip and a per-user Windows Installer
-package, `zapfast-vX.Y.Z-<target>.msi`, built by native-packages from
-`packaging/windows/zapfast.wxs` (`packaging/windows/msi.rb`). Releases up to
+package, `kuzgun-vX.Y.Z-<target>.msi`, built by native-packages from
+`packaging/windows/kuzgun.wxs` (`packaging/windows/msi.rb`). Releases up to
 0.20.1 also shipped an Inno Setup program (`-setup.exe`); it is gone, because
 the package is the one winget's manifests install, and the one signed and tested.
 
 The package takes over a copy the Inno Setup program installed: it installs
 into that folder, removes Inno's uninstaller and its Settings > Apps entry, and
 leaves the user's data (session, archive, settings) alone, as they live
-outside the program folder. ZapFast 0.20.0 and later update to the package by
+outside the program folder. Kuzgun 0.20.0 and later update to the package by
 themselves (the updater prefers the `.msi`). Older versions look for a
 `-setup.exe` that new releases no longer have, so they stop finding updates;
 their users download the `.msi` once (`docs/_guide/download.md` says so).
-`packaging/windows/zapfast.iss` stays only so `test-installer.ps1` can make an
+`packaging/windows/kuzgun.iss` stays only so `test-installer.ps1` can make an
 Inno install for the package to take over.
 
 ## Windows signing
 
-Tag releases sign `zapfast.exe` and the MSI with Azure Artifact Signing, as
+Tag releases sign `kuzgun.exe` and the MSI with Azure Artifact Signing, as
 **PlentyLabs UG (haftungsbeschränkt) & Co. KG**, through native-packages:
 `windows.signing` in `native-packages.yaml` turns it on,
-`native-packages sign-windows` signs `zapfast.exe` before the zip and the MSI
+`native-packages sign-windows` signs `kuzgun.exe` before the zip and the MSI
 pack it, and `native-packages build` signs the MSI before recording its
 checksum. Each
 signature is SHA-256 Authenticode with Microsoft's RFC 3161 timestamp, checked
@@ -145,8 +143,8 @@ is shared by Carmine's Windows apps and managed in `crmne/terraform`
 
 No secret is involved. The Windows build jobs run in this repository's
 `windows-signing` environment, which deploys only from `v*` tags, and sign in
-through GitHub's OIDC token as the Entra app `GitHub zapfast Windows signing`.
-That app trusts only `repo:crmne@106617/zapfast@1350713137:environment:windows-signing` (GitHub's immutable subject, with the owner's and repository's ids) and holds
+through GitHub's OIDC token as the Entra app `GitHub kuzgun Windows signing`.
+That app trusts only `repo:crmne@106617/kuzgun@1350713137:environment:windows-signing` (GitHub's immutable subject, with the owner's and repository's ids) and holds
 the "Artifact Signing Certificate Profile Signer" role on the account. The
 environment's variables, none of them secret, are `AZURE_CLIENT_ID`,
 `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`, `AZURE_SIGNING_ENDPOINT`,
@@ -162,59 +160,13 @@ A signature doesn't silence SmartScreen at once: reputation builds as people
 download releases signed by the same publisher, so keep signing every release
 with this identity.
 
-## Flatpak
-
-`packaging/flatpak/rocks.zapfast.ZapFast.yml` builds from source, with offline Cargo
-sources generated from the selected revision's lockfile. The adjacent bundle
-manifest reuses the Linux release binary, as in Spotifast. Both grant Wayland/X11,
-GPU, audio, network, keyring and tray access; attachments chosen by the user use
-portals. No home-directory permission is granted. `--persist=.local/state` keeps
-the archive and session on Flatpak versions without `XDG_STATE_HOME`.
-
-Generate a pinned Flathub checkout (Python needs `aiohttp`, `tomlkit` and `PyYAML`):
-
-```sh
-packaging/flatpak/flathub.sh vX.Y.Z /path/to/flathub-checkout
-flatpak-builder --user --install --force-clean build-dir /path/to/flathub-checkout/rocks.zapfast.ZapFast.yml
-```
-
-Flathub submission/review is a separate publication step; the manifest alone does
-not make ZapFast available in Flathub. A maintainer must submit it manually:
-[Flathub's requirements](https://docs.flathub.org/docs/for-app-authors/requirements#generative-ai-policy)
-prohibit AI agents from submitting or writing submission interactions and require
-disclosure of generated material. Review the manifests and these changes before
-submitting. The manifests use the current Freedesktop 26.08 runtime; the CI builder
-container is 25.08 and installs the runtime and SDK named by the manifest. The GitHub release job includes the bundle
-in `checksums.txt`. No existing release files are replaced by this change.
-
-## Fedora COPR and openSUSE OBS
-
-`packaging/rpm/zapfast.spec` builds ZapFast from its release source for the
-[paolino/zapfast](https://copr.fedorainfracloud.org/coprs/paolino/zapfast/) COPR
-and the `home:paolino` OBS project. Fill in `@VERSION@` and `@DATE@` (in RPM
-changelog form, such as `Tue Nov 03 2026`), then build a source RPM and submit
-it. Cargo fetches the locked dependencies during the build, so the COPR project
-has network access turned on for builds. Fedora 44 and newer ship a new enough
-Rust. Submissions are a manual maintainer step that needs a COPR API token:
-`~/.config/copr`, also in 1Password as "Fedora COPR API". It lasts 180 days
-from the COPR API page; the current one expires on 2026-12-03. `copr-cli` is
-not packaged for Arch, so run it from a Fedora container with the config
-mounted read-only.
-
-```sh
-sed -e "s/@VERSION@/X.Y.Z/g" -e "s/@DATE@/$(LC_ALL=C date '+%a %b %d %Y')/" \
-  packaging/rpm/zapfast.spec > zapfast.spec
-spectool -g -R zapfast.spec && rpmbuild -bs zapfast.spec
-copr-cli build paolino/zapfast ~/rpmbuild/SRPMS/zapfast-X.Y.Z-1.*.src.rpm
-```
-
 ## winget
 
-`packaging/winget/` holds the manifests for the `crmne.ZapFast` package in
+`packaging/winget/` holds the manifests for the `kaptanoguz.Kuzgun` package in
 [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs). They install
 the per-user MSI of each stable release, which also takes over a copy installed
 by the Inno Setup installer; its fixed UpgradeCode tells winget which installed
-program is ZapFast. v0.19.0 and earlier ship no MSI, so the first winget
+program is Kuzgun. v0.19.0 and earlier ship no MSI, so the first winget
 version is the first release that does.
 
 Submission is a manual step for the maintainer, after the release's assets and
@@ -223,13 +175,13 @@ published release, then validate and submit them from a fork of winget-pkgs:
 
 ```sh
 python3 packaging/winget/manifests.py vX.Y.Z /path/to/winget-pkgs
-winget validate --manifest /path/to/winget-pkgs/manifests/c/crmne/ZapFast/X.Y.Z
-winget install --manifest /path/to/winget-pkgs/manifests/c/crmne/ZapFast/X.Y.Z
+winget validate --manifest /path/to/winget-pkgs/manifests/c/crmne/Kuzgun/X.Y.Z
+winget install --manifest /path/to/winget-pkgs/manifests/c/crmne/Kuzgun/X.Y.Z
 ```
 
 Commit only that version's directory and open a pull request to
 `microsoft/winget-pkgs` (or use `wingetcreate submit` on the directory). Its
 validation installs the package and records anything else it needs. Later
-releases can reuse the same command or `wingetcreate update crmne.ZapFast`;
+releases can reuse the same command or `wingetcreate update kaptanoguz.Kuzgun`;
 change the templates here when the description or installers change, so the
 next submission keeps them.

@@ -358,7 +358,7 @@ dependencies = [
  "objc2-foundation 0.3.2",
  "parking_lot 0.12.5",
  "percent-encoding",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
  "wl-clipboard-rs",
  "x11rb",
 ]
@@ -2247,7 +2247,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -3739,6 +3739,108 @@ dependencies = [
 ]
 
 [[package]]
+name = "kuzgun"
+version = "0.21.2"
+dependencies = [
+ "aes 0.9.3",
+ "anyhow",
+ "apple-native-keyring-store",
+ "arboard",
+ "async-channel",
+ "base64 0.23.1",
+ "cbc",
+ "clap",
+ "directories",
+ "eframe",
+ "egui",
+ "egui_extras",
+ "emojis",
+ "env_logger",
+ "fastframe-audio",
+ "fastframe-autostart",
+ "fastframe-desktop",
+ "fastframe-dock",
+ "fastframe-emoji",
+ "fastframe-file",
+ "fastframe-fonts",
+ "fastframe-i18n",
+ "fastframe-icons",
+ "fastframe-instance",
+ "fastframe-log",
+ "fastframe-notifications",
+ "fastframe-power",
+ "fastframe-scroll",
+ "fastframe-shell",
+ "fastframe-text",
+ "fastframe-theme",
+ "fastframe-titlebar",
+ "fastframe-tray",
+ "fastframe-update",
+ "gethostname",
+ "getrandom 0.4.3",
+ "hkdf",
+ "hmac 0.13.0",
+ "http",
+ "icu_normalizer",
+ "icu_properties",
+ "image",
+ "jiff",
+ "keyring-core",
+ "libc",
+ "libwebp-sys2 0.2.0",
+ "linuxvideo",
+ "log",
+ "mime_guess2",
+ "mp4",
+ "nokhwa",
+ "objc2 0.6.5",
+ "objc2-app-kit 0.3.2",
+ "objc2-foundation 0.3.2",
+ "ogg",
+ "open",
+ "openh264",
+ "openh264-sys2",
+ "opus",
+ "png 0.18.1",
+ "qrcode",
+ "rand 0.10.3",
+ "rasterlottie",
+ "raw-window-handle",
+ "reqwest",
+ "resvg",
+ "rfd",
+ "ring",
+ "rodio",
+ "rtrb",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+ "skrifa",
+ "sonora",
+ "sonora-aec3",
+ "symphonia",
+ "tempfile",
+ "tokio",
+ "tokio-websockets",
+ "tray-icon",
+ "unicode-bidi",
+ "unicode-segmentation",
+ "ureq",
+ "webp-animation",
+ "whatsapp-rust",
+ "windows",
+ "windows-native-keyring-store",
+ "windows-sys 0.60.2",
+ "winit",
+ "winresource",
+ "zbus",
+ "zbus-secret-service-keyring-store",
+ "zeroize",
+ "zip",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5019,7 +5121,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -5546,9 +5648,9 @@ dependencies = [
 
 [[package]]
 name = "quinn-proto"
-version = "0.11.18"
+version = "0.11.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9746dbde176634f4f2f1faf2404e30a31b2bc1e9cafb5329c95d8177a18c9fc"
+checksum = "0e750cca55fe4f0439a15d0bb529da9651e79993e8e72c61a899a36d462befbe"
 dependencies = [
  "bytes",
  "getrandom 0.4.3",
@@ -5568,16 +5670,16 @@ dependencies = [
 
 [[package]]
 name = "quinn-udp"
-version = "0.5.15"
+version = "0.5.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35a133f956daabe89a61a685c2649f13d82d5aa4bd5d12d1277e1072a21c0694"
+checksum = "af66907df18639dcf4db56ca65490cabc4b27a97dbadd96f2926cca73298f016"
 dependencies = [
  "cfg_aliases",
  "libc",
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -6161,7 +6263,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -7002,10 +7104,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.4.3",
+ "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.4",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -8366,7 +8468,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -8908,108 +9010,6 @@ dependencies = [
  "quote",
  "syn 2.0.119",
  "synstructure",
-]
-
-[[package]]
-name = "zapfast"
-version = "0.21.2"
-dependencies = [
- "aes 0.9.3",
- "anyhow",
- "apple-native-keyring-store",
- "arboard",
- "async-channel",
- "base64 0.23.1",
- "cbc",
- "clap",
- "directories",
- "eframe",
- "egui",
- "egui_extras",
- "emojis",
- "env_logger",
- "fastframe-audio",
- "fastframe-autostart",
- "fastframe-desktop",
- "fastframe-dock",
- "fastframe-emoji",
- "fastframe-file",
- "fastframe-fonts",
- "fastframe-i18n",
- "fastframe-icons",
- "fastframe-instance",
- "fastframe-log",
- "fastframe-notifications",
- "fastframe-power",
- "fastframe-scroll",
- "fastframe-shell",
- "fastframe-text",
- "fastframe-theme",
- "fastframe-titlebar",
- "fastframe-tray",
- "fastframe-update",
- "gethostname",
- "getrandom 0.4.3",
- "hkdf",
- "hmac 0.13.0",
- "http",
- "icu_normalizer",
- "icu_properties",
- "image",
- "jiff",
- "keyring-core",
- "libc",
- "libwebp-sys2 0.2.0",
- "linuxvideo",
- "log",
- "mime_guess2",
- "mp4",
- "nokhwa",
- "objc2 0.6.5",
- "objc2-app-kit 0.3.2",
- "objc2-foundation 0.3.2",
- "ogg",
- "open",
- "openh264",
- "openh264-sys2",
- "opus",
- "png 0.18.1",
- "qrcode",
- "rand 0.10.3",
- "rasterlottie",
- "raw-window-handle",
- "reqwest",
- "resvg",
- "rfd",
- "ring",
- "rodio",
- "rtrb",
- "rusqlite",
- "serde",
- "serde_json",
- "sha2",
- "skrifa",
- "sonora",
- "sonora-aec3",
- "symphonia",
- "tempfile",
- "tokio",
- "tokio-websockets",
- "tray-icon",
- "unicode-bidi",
- "unicode-segmentation",
- "ureq",
- "webp-animation",
- "whatsapp-rust",
- "windows",
- "windows-native-keyring-store",
- "windows-sys 0.60.2",
- "winit",
- "winresource",
- "zbus",
- "zbus-secret-service-keyring-store",
- "zeroize",
- "zip",
 ]
 
 [[package]]

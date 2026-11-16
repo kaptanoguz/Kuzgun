@@ -419,7 +419,7 @@ fn sections(app: &App) -> Vec<Section> {
             translated(locale, "Custom title bar"),
             translated(
                 locale,
-                "Draw ZapFast's own title bar and window buttons instead of the desktop's.",
+                "Draw Kuzgun's own title bar and window buttons instead of the desktop's.",
             ),
             custom_titlebar_switch,
         );
@@ -612,7 +612,7 @@ fn sections(app: &App) -> Vec<Section> {
     let note = if app.account_privacy.fetch_failed {
         Some(crate::i18n::gettext(
             locale,
-            "Could not load your account privacy. Trying again when ZapFast reconnects.",
+            "Could not load your account privacy. Trying again when Kuzgun reconnects.",
         ))
     } else if !app.is_connected() {
         Some(crate::i18n::gettext(
@@ -673,7 +673,7 @@ fn sections(app: &App) -> Vec<Section> {
             translated(locale, "Show in the menu bar"),
             keyed(translated(
                 locale,
-                "Closing the window keeps ZapFast in the Dock. Quit with Ctrl+Q.",
+                "Closing the window keeps Kuzgun in the Dock. Quit with Ctrl+Q.",
             )),
             |settings| &mut settings.keep_running_in_background,
         );
@@ -713,7 +713,7 @@ fn sections(app: &App) -> Vec<Section> {
         translated(locale, "Check for updates"),
         translated(
             locale,
-            "Asks GitHub once a day, sending only the ZapFast version.",
+            "Asks GitHub once a day, sending only the Kuzgun version.",
         ),
         |settings| &mut settings.check_for_updates,
     );
@@ -721,7 +721,7 @@ fn sections(app: &App) -> Vec<Section> {
         translated(locale, "Download updates automatically"),
         translated(
             locale,
-            "You still choose when to restart. Package managers and Flatpak update ZapFast themselves.",
+            "You still choose when to restart. Package managers update Kuzgun themselves.",
         ),
         |settings| &mut settings.download_updates_automatically,
     );
@@ -897,7 +897,7 @@ fn sections(app: &App) -> Vec<Section> {
     let mut about_section = Section::new(translated(locale, "About"));
     about_section.block(
         vec![
-            "ZapFast".into(),
+            "Kuzgun".into(),
             translated(locale, "Keyboard shortcuts"),
             translated(locale, "Source code"),
         ],
@@ -962,7 +962,7 @@ fn app_lock_rows(app: &App, privacy: &mut Section) {
             translated(locale, "Lock after"),
             keyed(translated(
                 locale,
-                "Time without using ZapFast, also counted while it is in the tray. Ctrl+Shift+L locks it at once.",
+                "Time without using Kuzgun, also counted while it is in the tray. Ctrl+Shift+L locks it at once.",
             )),
             move |ui, app| {
                 let selected = app.settings.app_lock_after;
@@ -1181,7 +1181,7 @@ fn theme_picker(ui: &mut egui::Ui, app: &mut App) {
 }
 
 /// The website's page on writing a theme.
-const THEMES_GUIDE: &str = "https://zapfast.rocks/themes/";
+const THEMES_GUIDE: &str = "https://github.com/kaptanoguz/Kuzgun/blob/main/docs/_guide/themes.md";
 
 /// The interface language menu.
 fn font_picker(ui: &mut egui::Ui, app: &mut App) {
@@ -1817,7 +1817,7 @@ fn about(app: &mut App, ui: &mut egui::Ui) {
         ui.vertical(|ui| {
             theme::text(
                 ui,
-                format!("ZapFast {}", env!("CARGO_PKG_VERSION")),
+                format!("Kuzgun {}", env!("CARGO_PKG_VERSION")),
                 theme::semibold(16.0),
                 palette.text,
             );

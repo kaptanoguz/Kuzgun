@@ -1,12 +1,12 @@
 ---
 layout: home
-title: ZapFast
-description: ZapFast is a lightweight WhatsApp client for Linux, macOS, and Windows, written in Rust with no browser engine. Opens in under a second, about 200 MB of RAM.
+title: Kuzgun
+description: Kuzgun is a lightweight WhatsApp client for Linux, macOS, and Windows, written in Rust with no browser engine. Opens in under a second, about 200 MB of RAM.
 seo:
   title: Native WhatsApp Client for Linux, macOS and Windows
 permalink: /
 hero:
-  name: ZapFast
+  name: Kuzgun
   text: WhatsApp, native and fast
   tagline: A lightweight WhatsApp app for Linux, macOS, and Windows. Chat, send voice messages, and share files.
   actions:
@@ -14,15 +14,15 @@ hero:
       text: Download
       link: /download/
     - theme: alt
-      text: What is ZapFast?
-      link: /what-is-zapfast/
+      text: What is Kuzgun?
+      link: /what-is-kuzgun/
     - theme: alt
       text: GitHub
-      link: https://github.com/crmne/zapfast
+      link: https://github.com/kaptanoguz/Kuzgun
   image:
     dark: /screenshot.png
     light: /screenshot-light.png
-    alt: "ZapFast showing a conversation with an attachment, voice messages, reactions, a quoted reply, and a link preview"
+    alt: "Kuzgun showing a conversation with an attachment, voice messages, reactions, a quoted reply, and a link preview"
     width: 1800
     height: 1360
 
@@ -41,7 +41,7 @@ features:
     details: Photos, GIFs, stickers, documents, polls, locations, and link previews appear in the chat. Add captions before sending files.
   - icon: 🔔
     title: Background mode
-    details: Closing the window keeps ZapFast linked in the tray. Notifications show the chat picture, and muted chats stay quiet.
+    details: Closing the window keeps Kuzgun linked in the tray. Notifications show the chat picture, and muted chats stay quiet.
   - icon: 👥
     title: Several numbers
     details: Link more than one WhatsApp number and switch between them from your picture at the foot of the rail beside the chat list.
@@ -56,17 +56,17 @@ features:
   - icon: 🔓
     title: Open source
     details: MIT-licensed Rust that links through whatsapp-rust. The linking process is documented.
-    link: https://github.com/crmne/zapfast
+    link: https://github.com/kaptanoguz/Kuzgun
     link_text: Read the source
 ---
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ZapFast","url":"https://zapfast.rocks/","downloadUrl":"https://zapfast.rocks/download/","softwareVersion":"{{ site.zapfast_version }}","operatingSystem":"Linux, macOS, Windows","applicationCategory":"CommunicationApplication","license":"https://github.com/crmne/zapfast/blob/main/LICENSE","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://zapfast.rocks/screenshot.png","author":{"@type":"Person","name":"Carmine Paolino","url":"https://paolino.me"}}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Kuzgun","url":"https://github.com/kaptanoguz/Kuzgun","downloadUrl":"https://github.com/kaptanoguz/Kuzgun","softwareVersion":"{{ site.kuzgun_version }}","operatingSystem":"Linux, macOS, Windows","applicationCategory":"CommunicationApplication","license":"https://github.com/kaptanoguz/Kuzgun/blob/main/LICENSE","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://github.com/kaptanoguz/Kuzgun","author":{"@type":"Person","name":"Carmine Paolino","url":"https://paolino.me"}}
 </script>
 
-<p class="sibling"><strong>Want Spotify just as fast and native?</strong> <a href="https://spotifast.rocks">Spotifast</a> is ZapFast's sibling: the same native interface, for Spotify. Both are built on <a href="https://fastframe.dev">fastframe</a>, the shared foundation for native Rust apps built with <a href="https://www.egui.rs">egui</a>.</p>
+<p class="sibling"><strong>Want Spotify just as fast and native?</strong> <a href="https://spotifast.rocks">Spotifast</a> is Kuzgun's sibling: the same native interface, for Spotify. Both are built on <a href="https://fastframe.dev">fastframe</a>, the shared foundation for native Rust apps built with <a href="https://www.egui.rs">egui</a>.</p>
 
-<video class="hero-film image-src" width="1280" height="720" controls muted loop playsinline preload="metadata" poster="{{ '/assets/images/launch-film-poster.jpg' | relative_url }}" aria-label="ZapFast in under a minute: a film of the app, made with its built-in demo content" hidden>
+<video class="hero-film image-src" width="1280" height="720" controls muted loop playsinline preload="metadata" poster="{{ '/assets/images/launch-film-poster.jpg' | relative_url }}" aria-label="Kuzgun in under a minute: a film of the app, made with its built-in demo content" hidden>
   <source src="{{ '/assets/videos/launch-film.mp4' | relative_url }}" type="video/mp4">
 </video>
 

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # Installs a source build for the current user: the binary, the icon, and a
-# launcher entry that opens ZapFast with no terminal.
+# launcher entry that opens Kuzgun with no terminal.
 #
 # Usage: packaging/install-user.sh [binary] [prefix]
-#   binary  the built executable (default: target/release/zapfast)
+#   binary  the built executable (default: target/release/kuzgun)
 #   prefix  the install prefix   (default: $PREFIX, else ~/.local with data
 #           in $XDG_DATA_HOME when it is set)
 #
-# The desktop file in packaging/ names its binary as `Exec=zapfast`, which is
+# The desktop file in packaging/ names its binary as `Exec=kuzgun`, which is
 # right for a package: a package manager installs the binary to /usr/bin,
 # where every session finds it on PATH. A user install lands in ~/.local/bin,
-# which a graphical session often does not put on PATH, so `Exec=zapfast`
+# which a graphical session often does not put on PATH, so `Exec=kuzgun`
 # would find nothing and the launcher entry would do nothing when clicked.
 # This script therefore writes the installed entry with the full path to the
 # binary it just installed, computed here at install time. No machine's path
@@ -20,7 +20,7 @@ set -euo pipefail
 here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo=$(dirname -- "$here")
 
-binary=${1:-"$repo/target/release/zapfast"}
+binary=${1:-"$repo/target/release/kuzgun"}
 prefix=${2:-"${PREFIX:-}"}
 if [[ -n "$prefix" ]]; then
   # An explicit prefix owns everything, data included, and is made absolute
@@ -35,17 +35,23 @@ fi
 bin_dir="$prefix/bin"
 apps_dir="$data_dir/applications"
 icons_dir="$data_dir/icons/hicolor/scalable/apps"
+symbolic_dir="$data_dir/icons/hicolor/symbolic/apps"
 
 if [[ ! -x "$binary" ]]; then
   echo "No built binary at $binary; build it first: cargo build --release --locked" >&2
   exit 1
 fi
 
-installed="$bin_dir/zapfast"
+installed="$bin_dir/kuzgun"
 install -Dm755 "$binary" "$installed"
-install -Dm644 "$here/icons/zapfast.svg" "$icons_dir/zapfast.svg"
+install -Dm644 "$here/icons/kuzgun.svg" "$icons_dir/io.github.kaptanoguz.Kuzgun.svg"
+install -Dm644 "$here/icons/kuzgun-symbolic.svg" "$symbolic_dir/io.github.kaptanoguz.Kuzgun-symbolic.svg"
+while IFS= read -r png; do
+  size=$(basename "$(dirname "$(dirname "$png")")")
+  install -Dm644 "$png" "$data_dir/icons/hicolor/$size/apps/io.github.kaptanoguz.Kuzgun.png"
+done < <(find "$here/icons/hicolor" -name 'io.github.kaptanoguz.Kuzgun.png')
 mkdir -p "$apps_dir"
-# The lines that change: `Exec=zapfast`, and the actions' `Exec=zapfast <verb>`,
+# The lines that change: `Exec=kuzgun`, and the actions' `Exec=kuzgun <verb>`,
 # name the path just installed, so the entry works whether or not ~/.local/bin
 # is on the session's PATH. Arguments after the binary are kept.
 #
@@ -81,18 +87,18 @@ EXEC_PATH="$installed" awk '
     next
   }
   { print }
-' "$here/applications/zapfast.desktop" > "$apps_dir/zapfast.desktop"
+' "$here/applications/io.github.kaptanoguz.Kuzgun.desktop" > "$apps_dir/io.github.kaptanoguz.Kuzgun.desktop"
 
 # desktop-file-validate rejects the `\\` that a literal backslash in a quoted
 # Exec must use, so a prefix containing one is installed without that check
 # rather than failing the install on a valid entry.
 if command -v desktop-file-validate >/dev/null 2>&1 && [[ "$installed" != *\\* ]]; then
-  desktop-file-validate "$apps_dir/zapfast.desktop"
+  desktop-file-validate "$apps_dir/io.github.kaptanoguz.Kuzgun.desktop"
 fi
 if command -v update-desktop-database >/dev/null 2>&1; then
   update-desktop-database "$apps_dir" 2>/dev/null || true
 fi
 
 echo "Installed $installed"
-echo "Installed $apps_dir/zapfast.desktop (Exec=\"$installed\")"
-echo "ZapFast now opens from the application launcher."
+echo "Installed $apps_dir/io.github.kaptanoguz.Kuzgun.desktop (Exec=\"$installed\")"
+echo "Kuzgun now opens from the application launcher."

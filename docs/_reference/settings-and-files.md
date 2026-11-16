@@ -6,29 +6,29 @@ nav_order: 0
 
 ## File locations
 
-ZapFast follows each platform's conventions. Each linked number has its own
+Kuzgun follows each platform's conventions. Each linked number has its own
 folder, `<id>` below, so files, caches, and keys never mix between numbers.
 On Linux:
 
 | What | Where | Notes |
 | --- | --- | --- |
-| Settings | `~/.config/zapfast/settings.json` | JSON, safe to edit, or declared with the [Home Manager module](/download/); the app lock password and the locked-chats code are kept only as salted verifiers |
-| Account list | `~/.config/zapfast/accounts.json` | Which numbers are linked here and which one is showing |
-| Session keys | `~/.local/state/zapfast/accounts/<id>/session.db` | Deleting it unlinks that number |
-| Message archive | `~/.local/state/zapfast/accounts/<id>/archive.db` | Encrypted; the only copy of history WhatsApp will not send again |
-| Per-number settings | `~/.local/state/zapfast/accounts/<id>/settings.json` | Notifications, receipts, typing, automatic downloads, background history, the last open chat, the chat-list chip or label, and the wallpaper |
-| Stickers and packs | `~/.local/state/zapfast/accounts/<id>/stickers/` | Plain WebP files; each pack is a folder |
-| Wallpaper image | `~/.local/state/zapfast/accounts/<id>/wallpaper.jpg` | Copy of the chosen picture (or `.png`, `.webp`, `.gif`) |
-| Attachments, avatars | `~/.cache/zapfast/accounts/<id>/` | Safe to delete; available files download again when viewed |
-| Last run's log | `~/.local/state/zapfast/zapfast.log` | `--verbose` for more |
-| The run before's log | `~/.local/state/zapfast/zapfast.previous.log` | Kept for one more start |
-| Crash log | `~/.local/state/zapfast/panic.log` | Safe to delete |
+| Settings | `~/.config/kuzgun/settings.json` | JSON, safe to edit, or declared with the [Home Manager module](/download/); the app lock password and the locked-chats code are kept only as salted verifiers |
+| Account list | `~/.config/kuzgun/accounts.json` | Which numbers are linked here and which one is showing |
+| Session keys | `~/.local/state/kuzgun/accounts/<id>/session.db` | Deleting it unlinks that number |
+| Message archive | `~/.local/state/kuzgun/accounts/<id>/archive.db` | Encrypted; the only copy of history WhatsApp will not send again |
+| Per-number settings | `~/.local/state/kuzgun/accounts/<id>/settings.json` | Notifications, receipts, typing, automatic downloads, background history, the last open chat, the chat-list chip or label, and the wallpaper |
+| Stickers and packs | `~/.local/state/kuzgun/accounts/<id>/stickers/` | Plain WebP files; each pack is a folder |
+| Wallpaper image | `~/.local/state/kuzgun/accounts/<id>/wallpaper.jpg` | Copy of the chosen picture (or `.png`, `.webp`, `.gif`) |
+| Attachments, avatars | `~/.cache/kuzgun/accounts/<id>/` | Safe to delete; available files download again when viewed |
+| Last run's log | `~/.local/state/kuzgun/kuzgun.log` | `--verbose` for more |
+| The run before's log | `~/.local/state/kuzgun/kuzgun.previous.log` | Kept for one more start |
+| Crash log | `~/.local/state/kuzgun/panic.log` | Safe to delete |
 
 Back up the archive if you need its history. WhatsApp sends only recent
-history to a new device, although ZapFast can request some older messages from
-the phone. Clearing the media cache makes ZapFast download attachments again.
+history to a new device, although Kuzgun can request some older messages from
+the phone. Clearing the media cache makes Kuzgun download attachments again.
 Expired attachments may still be available through the phone.
-If a downloaded file has gone when you try to open it, ZapFast says so and its
+If a downloaded file has gone when you try to open it, Kuzgun says so and its
 message offers the download again, without a restart.
 A download is reported as complete only after its local path is recorded in
 the archive. If that write fails, the attachment shows a failure instead;
@@ -59,24 +59,24 @@ file already in the folder is never replaced, and the download becomes
 become `_`.
 
 On macOS, settings, state, and the logs are in
-`~/Library/Application Support/me.paolino.zapfast` and the caches in
-`~/Library/Caches/me.paolino.zapfast`. On Windows, settings are in
-`%APPDATA%\paolino\zapfast\config`, state and the logs in
-`%LOCALAPPDATA%\paolino\zapfast\data`, and the caches in
-`%LOCALAPPDATA%\paolino\zapfast\cache`.
+`~/Library/Application Support/io.github.kaptanoguz.Kuzgun` and the caches in
+`~/Library/Caches/io.github.kaptanoguz.Kuzgun`. On Windows, settings are in
+`%APPDATA%\paolino\kuzgun\config`, state and the logs in
+`%LOCALAPPDATA%\paolino\kuzgun\data`, and the caches in
+`%LOCALAPPDATA%\paolino\kuzgun\cache`.
 
-On first start, ZapFast moves the corresponding `fastsapp` directories (or
+On first start, Kuzgun moves the corresponding `fastsapp` directories (or
 `fastwhatsapp` from earlier versions), including the session, archive, saved
-stickers, and window state. Existing ZapFast directories are never overwritten.
-Quit FastsApp first; launching ZapFast while it is running brings the existing
+stickers, and window state. Existing Kuzgun directories are never overwritten.
+Quit FastsApp first; launching Kuzgun while it is running brings the existing
 window forward. A single-number setup from before 0.19 moves into
 `accounts/1/` on first start, keyring key included; if that cannot finish (a
-locked keyring, or a folder already in the way), ZapFast stops without moving
+locked keyring, or a folder already in the way), Kuzgun stops without moving
 anything and says why in its log. If `accounts/1/` already holds a linked
-session, ZapFast uses it and leaves any older files beside it alone; an older
-ZapFast still installed can leave such files.
+session, Kuzgun uses it and leaves any older files beside it alone; an older
+Kuzgun still installed can leave such files.
 
-On Linux and macOS, ZapFast restricts its configuration, state, and cache
+On Linux and macOS, Kuzgun restricts its configuration, state, and cache
 directories to your user (`0700`) and stops at startup if it cannot. Windows
 uses the permissions inherited from your user profile.
 
@@ -89,7 +89,7 @@ Credential Manager. Back up both the archive and its keyring entry: copying
 only `archive.db` to another computer is not enough.
 
 If the keyring is locked or unavailable, unlock it and click **Retry**;
-ZapFast keeps the archive intact and waits before connecting. It never saves
+Kuzgun keeps the archive intact and waits before connecting. It never saves
 a replacement plaintext archive.
 
 A missing key is different from a locked keyring. Restore the original
@@ -98,7 +98,7 @@ creating new credentials will not help: neither can decrypt the existing
 archive. If the key cannot come back, **Start over…** renames the unreadable
 archive to `archive-unreadable-<date>.db`, forgets the linked session, and
 shows the linking screen; linking again brings recent history back from your
-phone. Remove the old ZapFast entry under **Linked devices** on the phone
+phone. Remove the old Kuzgun entry under **Linked devices** on the phone
 afterwards.
 
 Only the archive and its SQLite journal are encrypted. Session keys,
@@ -141,7 +141,7 @@ name or description, in the interface language or in English.
   Brazilian Portuguese, German, Spanish, Italian, French, Russian, Simplified
   Chinese, Traditional Chinese, Turkish, Indonesian, and Dutch are available; otherwise English.
   Message contents, names, and logs are never translated.
-- **Custom title bar** (Windows and Linux, off by default): ZapFast draws
+- **Custom title bar** (Windows and Linux, off by default): Kuzgun draws
   its own title bar instead of the desktop's. The window buttons sit in the
   top corner of whichever pane is there (the open chat's header, the info
   panel, Settings, the Calls page, the call screen), on the left or the
@@ -161,15 +161,15 @@ name or description, in the interface language or in English.
   come into view. When off, click one to download it. Visible stickers still
   download automatically. Larger attachments download only when clicked.
 - **Fetch older history**: off by default, and set for
-  each number. When on, ZapFast asks the phone for older messages without you
+  each number. When on, Kuzgun asks the phone for older messages without you
   scrolling: the open chat first, then pinned chats and the ten most recently
   active ones (never channels). It sends at most one request every five
   minutes, since each one wakes the phone, and only while no other history request is waiting. Each chat is
-  asked for at most five pages each time ZapFast runs, and a chat the phone
+  asked for at most five pages each time Kuzgun runs, and a chat the phone
   does not answer goes to the back of the queue. Unanswered requests back off
   for that chat only; other chats keep the normal twenty-second gap. After
   three unanswered requests in a row, that chat's background recovery pauses
-  until one of those requests gets a late reply, or ZapFast reconnects or
+  until one of those requests gets a late reply, or Kuzgun reconnects or
   restarts. This does not mark history complete or prevent manual requests.
   A matched background reply resets that chat's timeout count, even if late.
   Requests that cannot be sent still back off the whole account. Pages fetched
@@ -178,7 +178,7 @@ name or description, in the interface language or in English.
 - **Keep chats archived**: on by default. When off, a new message, received or
   sent, brings an archived chat back to the list. Applies to all accounts here
   whose phone has not sent its own **Keep chats archived**; once a phone has,
-  ZapFast follows the phone for that account. It does not change the phone's
+  Kuzgun follows the phone for that account. It does not change the phone's
   setting.
 - **Pause other media while recording or playing**: pause music and videos in
   other apps while you record, or while a voice message, audio, or video plays
@@ -192,14 +192,14 @@ name or description, in the interface language or in English.
   quiet. The bell beside each number in the account switcher turns the same
   setting off and on for that number without switching to it.
 - **Show message content in notifications**: on by default. When off, every
-  notification says only "New message" from ZapFast, without the chat, the
+  notification says only "New message" from Kuzgun, without the chat, the
   sender, the text, or a picture, as behind the app lock, and plays only the
   message sound. Clicking one still opens the message. Applies to every
   account.
 - **Message sound** and **Mention sound**: Pidgin's sounds, the system sound,
   none, or an audio file. On macOS, Pidgin's sounds and the system sound play
   with the notification, so Do Not Disturb, Focus, and the notification
-  settings for ZapFast silence them; an audio file of your own plays
+  settings for Kuzgun silence them; an audio file of your own plays
   regardless.
 - **Play sounds for group messages**: when off, only mentions and replies to
   you make a sound in groups.
@@ -222,28 +222,27 @@ name or description, in the interface language or in English.
   servers and shared with your phone. They can be changed while connected.
 - **Blocked contacts**: view your WhatsApp account’s blocked contacts and unblock
   them, including people without a local chat. Changes require a connection.
-- **App lock**: hide ZapFast behind a password. See [App lock](#app-lock).
+- **App lock**: hide Kuzgun behind a password. See [App lock](#app-lock).
 
 **System**
 
-- **Keep running when the window closes** (Linux and Windows): keep ZapFast
-  linked in the tray. With this off ZapFast has no tray icon; an icon already
+- **Keep running when the window closes** (Linux and Windows): keep Kuzgun
+  linked in the tray. With this off Kuzgun has no tray icon; an icon already
   there leaves at the next start.
 - **Show in the menu bar** (macOS): the menu bar icon. Closing the window
-  always keeps ZapFast running in the Dock, which reopens it; **Quit**
-  (Command+Q) quits. With this off ZapFast has no menu bar icon; an icon
+  always keeps Kuzgun running in the Dock, which reopens it; **Quit**
+  (Command+Q) quits. With this off Kuzgun has no menu bar icon; an icon
   already there leaves at the next start, and **Start at login** opens the
   window, since the Dock cannot bring back a window that was never made.
 - **Start at login**: start in the tray without a window, where the platform
-  supports it. If the desktop's tray is not up yet, ZapFast waits up to 30
+  supports it. If the desktop's tray is not up yet, Kuzgun waits up to 30
   seconds for it, then opens the window, since a desktop without a tray could
   not bring it back. On macOS this is a login item under System Settings >
-  General > Login Items, which macOS may ask you to allow there; inside a
-  Flatpak the desktop's background portal asks first.
+  General > Login Items, which macOS may ask you to allow there.
 - **Check for updates**: ask GitHub once a day whether a newer release exists.
 - **Download updates automatically**: download and verify a new release in the
-  background; restarting stays your choice. Package managers and Flatpak update
-  ZapFast themselves.
+  background; restarting stays your choice. A `.deb` is updated by installing
+  the new package.
 - **Proxy**: for the WhatsApp connection, media, profile pictures, GIF search,
   Signal sticker imports, link previews for the messages you write, and update
   checks. It accepts `socks5h://host:port` (the proxy resolves names, as Tor
@@ -270,7 +269,7 @@ playback speed, and the chat list and search pane widths.
 Development builds also remember the window's size, position, and maximized
 state in `settings.json`, including when reopening from the tray or a
 notification. The window opens at the same size whatever the interface's
-zoom. On Wayland the compositor controls placement, so ZapFast keeps the size
+zoom. On Wayland the compositor controls placement, so Kuzgun keeps the size
 without choosing the position. These window changes and **Keep chats
 archived** are not yet included in 0.19.0.
 
@@ -287,10 +286,10 @@ the one above: it stays on only if both were on.
 ## App lock
 
 Like WhatsApp Web's screen lock, **Settings > Privacy > App lock** hides
-ZapFast behind a password of at least six characters. ZapFast then starts
+Kuzgun behind a password of at least six characters. Kuzgun then starts
 locked and locks again after 1 minute, 15 minutes (the default), or 1 hour
 without input, a choice under **Lock after**; time hidden in the tray counts.
-**Lock ZapFast** in the tray menu and `Ctrl+Shift+L` lock it at once.
+**Lock Kuzgun** in the tray menu and `Ctrl+Shift+L` lock it at once.
 
 While locked, the window shows only the lock screen. Messages keep arriving
 but stay unread, and notifications say only "New message", without the chat,
@@ -310,27 +309,26 @@ opens the other.
 
 ## Updates
 
-With **Check for updates** on, ZapFast asks GitHub once a day for a newer
+With **Check for updates** on, Kuzgun asks GitHub once a day for a newer
 release. **Update** in the banner downloads and verifies it, and **Restart to
 update** installs it when convenient. Downloads are checked against the
 release's SHA-256 checksums, whose manifest must carry a valid Ed25519
 publisher signature; a missing or invalid signature stops the update. The
 updater keeps a backup and restores it if the new version cannot start.
 Release builds also carry GitHub provenance attestations
-(`gh attestation verify FILE -R crmne/zapfast`).
+(`gh attestation verify FILE -R kaptanoguz/Kuzgun`).
 
-The in-app updater handles portable downloads (keep `zapfast-portable.txt`
+The in-app updater handles portable downloads (keep `kuzgun-portable.txt`
 beside the executable), the Windows installer, and the macOS app in
-Applications. AUR, DEB, RPM, Flatpak, Nix, Cargo, and Homebrew installations
-update through their package manager; an AppImage is replaced by downloading
-the new one.
+Applications. A `.deb`, the Windows installer, and a Homebrew installation
+update through their package manager.
 
 ## The log
 
-Each run starts `zapfast.log` afresh and records warnings and errors, never
+Each run starts `kuzgun.log` afresh and records warnings and errors, never
 message contents, phone numbers, or keys. Include the end of this file when
 reporting an issue. **Settings > Files > Log > Open** shows it. The run before
-is kept beside it as `zapfast.previous.log`: if ZapFast froze and you had to
+is kept beside it as `kuzgun.previous.log`: if Kuzgun froze and you had to
 restart it, that file holds what happened.
 
 During a call the log also records the call's numbers every few seconds: the
@@ -339,7 +337,7 @@ health. They are counts and sizes only.
 
 ### Saving a call's video for diagnosis
 
-To work on a video call's picture quality, start ZapFast with
+To work on a video call's picture quality, start Kuzgun with
 `ZAPFAST_CALL_VIDEO_DUMP` set to a folder. Each video call then writes the
 video it sends and the video it receives there, as raw H.264
 (`<time>-<call>-sent.h264` and `-received.h264`), which `ffmpeg` and media
@@ -349,7 +347,7 @@ agreed, and delete the files when you are done.
 
 ### Saving a call's audio for diagnosis
 
-To work on echo cancellation, start ZapFast with `ZAPFAST_CALL_AUDIO_DUMP` set
+To work on echo cancellation, start Kuzgun with `ZAPFAST_CALL_AUDIO_DUMP` set
 to a folder. Each call's microphone stream then writes four files there,
 `<time>-<stream>-reference.wav` (the other side's voice as your speaker played
 it), `-microphone.wav` (your microphone before any processing), `-output.wav`

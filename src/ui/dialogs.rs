@@ -355,12 +355,12 @@ fn unlock_locked_chats(app: &mut App, ui: &mut egui::Ui) {
     let desc_text = if setup {
         crate::i18n::gettext(
             app.locale,
-            "Choose a local code to open the Locked tab. It is separate from your phone's code. This hides chats in ZapFast, it does not add another encryption layer.",
+            "Choose a local code to open the Locked tab. It is separate from your phone's code. This hides chats in Kuzgun, it does not add another encryption layer.",
         )
     } else {
         crate::i18n::gettext(
             app.locale,
-            "Enter your local ZapFast code. Leaving the Locked tab or closing the window locks it again.",
+            "Enter your local Kuzgun code. Leaving the Locked tab or closing the window locks it again.",
         )
     };
     theme::paragraph(ui, desc_text, theme::regular(13.0), palette.secondary);
@@ -446,7 +446,7 @@ fn confirm_lock_chat(app: &mut App, ui: &mut egui::Ui, id: &str) {
         ui,
         crate::i18n::gettext(
             app.locale,
-            "This moves the chat to the Locked tab, hiding it from the normal chat list, search, unread badges, and notifications. The lock status also syncs to your phone. Open Locked with a separate local ZapFast code to read it.",
+            "This moves the chat to the Locked tab, hiding it from the normal chat list, search, unread badges, and notifications. The lock status also syncs to your phone. Open Locked with a separate local Kuzgun code to read it.",
         ),
         theme::regular(13.0),
         palette.secondary,
@@ -1064,7 +1064,7 @@ fn about(app: &mut App, ui: &mut egui::Ui) {
         let (logo, _) = ui.allocate_exact_size(egui::Vec2::splat(44.0), egui::Sense::hover());
         theme::mark(ui, logo.center(), 44.0);
         ui.vertical(|ui| {
-            theme::text(ui, "ZapFast", theme::bold(17.0), palette.text);
+            theme::text(ui, "Kuzgun", theme::bold(17.0), palette.text);
             let version_label = crate::i18n::gettext(app.locale, "Version {version}")
                 .replace("{version}", env!("CARGO_PKG_VERSION"));
             theme::text(ui, version_label, theme::regular(13.0), palette.secondary);
@@ -1086,6 +1086,12 @@ fn about(app: &mut App, ui: &mut egui::Ui) {
             app.locale,
             "This is an unofficial client. Using it may be against WhatsApp's terms of service and could get an account suspended.",
         ),
+        theme::regular(12.5),
+        palette.secondary,
+    );
+    theme::paragraph(
+        ui,
+        crate::i18n::gettext(app.locale, "Kuzgun is a fork of ZapFast."),
         theme::regular(12.5),
         palette.secondary,
     );
@@ -1479,7 +1485,7 @@ fn confirm_start_over(app: &mut App, ui: &mut egui::Ui) {
         &[
             &crate::i18n::gettext(
                 locale,
-                "ZapFast keeps your unreadable archive as a separate file, creates a new one, and asks you to link again. Linking again brings back recent history from your phone. Afterwards, remove the old ZapFast entry under Linked devices on your phone.",
+                "Kuzgun keeps your unreadable archive as a separate file, creates a new one, and asks you to link again. Linking again brings back recent history from your phone. Afterwards, remove the old Kuzgun entry under Linked devices on your phone.",
             ),
             &crate::i18n::gettext(
                 locale,

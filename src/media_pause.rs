@@ -141,7 +141,7 @@ fn pausable_player(bus_name: &str) -> bool {
     // going through it too would pause one of them twice. ZapFast does not
     // publish MPRIS today, but must never pause itself if it starts to.
     let app = player.split('.').next().unwrap_or_default();
-    !player.is_empty() && app != "playerctld" && app != "zapfast"
+    !player.is_empty() && app != "playerctld" && app != "kuzgun" && app != "zapfast"
 }
 
 #[cfg(target_os = "linux")]
