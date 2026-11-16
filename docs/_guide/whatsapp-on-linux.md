@@ -1,6 +1,6 @@
 ---
 title: WhatsApp on Linux
-description: WhatsApp has no Linux app. Kuzgun is a native WhatsApp client for Linux, with packages for Arch, Fedora, Debian, Ubuntu, Nix, Flatpak and AppImage.
+description: WhatsApp has no Linux app. Kuzgun is a native WhatsApp client for Linux, installed from a .deb on Debian, Ubuntu and their derivatives.
 permalink: /whatsapp-on-linux/
 nav_order: 4
 seo:
@@ -36,12 +36,7 @@ Every Linux package is on the [download page](/download/#linux). In short:
 
 | Distribution | How |
 | --- | --- |
-| Arch, Manjaro, CachyOS, Omarchy | `yay -S kuzgun-bin` from the AUR |
-| Fedora | `sudo dnf copr enable paolino/kuzgun`, then `sudo dnf install kuzgun` |
-| Debian, Ubuntu, Linux Mint, Pop!_OS | the `.deb` from the download page: `sudo apt install ./kuzgun_*_amd64.deb` |
-| Other RPM distributions | the `.rpm` from the download page |
-| NixOS and Nix | `nix profile install github:kaptanoguz/Kuzgun`, or the Home Manager module |
-| Any distribution | the Flatpak bundle, or the AppImage |
+| Debian, Ubuntu, Linux Mint, Pop!_OS | the `.deb` from the download page: `sudo apt install ./kuzgun_*_amd64.deb` (or `_arm64.deb`) |
 
 Then open Kuzgun and link it from your phone, under **Linked devices**,
 with the QR code or a code sent to your number. [Getting started](/getting-started/)

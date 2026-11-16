@@ -1903,10 +1903,10 @@ msgstr "Descargar actualizaciones automáticamente"
 
 #: src/ui/settings.rs:711
 msgid ""
-"You still choose when to restart. Package managers and Flatpak update "
+"You still choose when to restart. Package managers update "
 "Kuzgun themselves."
 msgstr ""
-"Tú decides cuándo reiniciar. Los gestores de paquetes y Flatpak actualizan "
+"Tú decides cuándo reiniciar. Los gestores de paquetes actualizan "
 "Kuzgun por su cuenta."
 
 #: src/ui/settings.rs:724

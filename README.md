@@ -62,10 +62,9 @@ https://github.com/user-attachments/assets/2bf86b54-45fc-4add-8de7-c426c3cdad9b
 
 | Platform | Installation |
 |---|---|
+| **Linux** | Install the `.deb` from the [releases page](https://github.com/kaptanoguz/Kuzgun/releases): `sudo apt install ./kuzgun_*_amd64.deb` (or `_arm64.deb`). |
 | **macOS** | [Download a release](https://github.com/kaptanoguz/Kuzgun/releases). |
-| **Arch Linux** | `yay -S kuzgun-bin` |
 | **Windows** | Choose your build on the [Download page](https://github.com/kaptanoguz/Kuzgun). |
-| **Other Linux** | Find Nix, AppImage, and other options on the [Download page](https://github.com/kaptanoguz/Kuzgun). |
 | **From source** | Follow [Getting started](https://github.com/kaptanoguz/Kuzgun) for dependencies and commands. |
 
 ## Link your phone

@@ -88,5 +88,5 @@ appearance.
 On Omarchy, **Follow system** already uses your current Omarchy colours, and
 Kuzgun follows each theme change as it happens.
 Elsewhere on Linux it takes the light or dark preference your desktop
-publishes through its settings portal (GNOME, KDE, and Flatpak), and
+publishes through its settings portal (GNOME and KDE), and
 switches as soon as you change it.

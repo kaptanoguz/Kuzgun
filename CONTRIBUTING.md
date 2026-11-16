@@ -125,8 +125,8 @@ the catalogs without gettext tools.
 
 Linux needs the development packages listed in
 [Getting started](https://github.com/kaptanoguz/Kuzgun); `nix develop`
-provides the complete development environment. When changing `Cargo.lock` or
-`flake.nix`, also verify `nix build` on a Nix host or wait for the Nix CI job.
+provides the complete development environment. The flake's development shell
+is for building from source; Kuzgun is not published as a Nix package.
 Passing CI is required, but does not replace review for correctness, product
 fit, maintainability, or security.
 

@@ -1903,10 +1903,10 @@ msgstr "Unduh pembaruan secara otomatis"
 
 #: src/ui/settings.rs:711
 msgid ""
-"You still choose when to restart. Package managers and Flatpak update "
+"You still choose when to restart. Package managers update "
 "Kuzgun themselves."
 msgstr ""
-"Anda tetap memilih kapan harus memulai ulang. Manajer paket dan Flatpak "
+"Anda tetap memilih kapan harus memulai ulang. Manajer paket "
 "memperbarui Kuzgun sendiri."
 
 #: src/ui/settings.rs:724

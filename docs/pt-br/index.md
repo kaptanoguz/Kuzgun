@@ -42,12 +42,7 @@ Em resumo:
 
 | Distribuição | Como |
 | --- | --- |
-| Arch, Manjaro, CachyOS, Omarchy | `yay -S kuzgun-bin`, pelo AUR |
-| Fedora | `sudo dnf copr enable paolino/kuzgun` e depois `sudo dnf install kuzgun` |
-| Debian, Ubuntu, Linux Mint, Pop!_OS | o `.deb` da página de download: `sudo apt install ./kuzgun_*_amd64.deb` |
-| Outras distribuições com RPM | o `.rpm` da página de download |
-| NixOS e Nix | `nix profile install github:kaptanoguz/Kuzgun`, ou o módulo do Home Manager |
-| Qualquer distribuição | o pacote Flatpak ou o AppImage |
+| Debian, Ubuntu, Linux Mint, Pop!_OS | o `.deb` da página de download: `sudo apt install ./kuzgun_*_amd64.deb` (ou `_arm64.deb`) |
 
 Também há versões para [macOS e Windows](/download/).
 

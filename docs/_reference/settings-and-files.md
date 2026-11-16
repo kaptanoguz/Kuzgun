@@ -238,12 +238,11 @@ name or description, in the interface language or in English.
   supports it. If the desktop's tray is not up yet, Kuzgun waits up to 30
   seconds for it, then opens the window, since a desktop without a tray could
   not bring it back. On macOS this is a login item under System Settings >
-  General > Login Items, which macOS may ask you to allow there; inside a
-  Flatpak the desktop's background portal asks first.
+  General > Login Items, which macOS may ask you to allow there.
 - **Check for updates**: ask GitHub once a day whether a newer release exists.
 - **Download updates automatically**: download and verify a new release in the
-  background; restarting stays your choice. Package managers and Flatpak update
-  Kuzgun themselves.
+  background; restarting stays your choice. A `.deb` is updated by installing
+  the new package.
 - **Proxy**: for the WhatsApp connection, media, profile pictures, GIF search,
   Signal sticker imports, link previews for the messages you write, and update
   checks. It accepts `socks5h://host:port` (the proxy resolves names, as Tor
@@ -321,9 +320,8 @@ Release builds also carry GitHub provenance attestations
 
 The in-app updater handles portable downloads (keep `kuzgun-portable.txt`
 beside the executable), the Windows installer, and the macOS app in
-Applications. AUR, DEB, RPM, Flatpak, Nix, Cargo, and Homebrew installations
-update through their package manager; an AppImage is replaced by downloading
-the new one.
+Applications. A `.deb`, the Windows installer, and a Homebrew installation
+update through their package manager.
 
 ## The log
 

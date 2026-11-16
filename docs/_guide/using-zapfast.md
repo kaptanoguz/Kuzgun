@@ -263,8 +263,7 @@ The sticker is a 512 × 512 WebP under WhatsApp's 100 KB limit.
 
 Paste a picture or copied files, drop files on the window, or select them with
 the paperclip.
-On Wayland, attachment paste uses the window's native clipboard, including
-inside Flatpak without an X11 connection.
+On Wayland, attachment paste uses the window's native clipboard.
 A pasted or dropped attachment is ready at once, so the send key sends it even
 when pressed straight after pasting, and a quick Ctrl+V tap pastes a picture
 just as a held one does. Other text fields, such as search, paste only text,
@@ -598,9 +597,8 @@ Calls open the system's default microphone and speaker, and the first camera.
 The pickers move a call to another device while it runs without changing your
 system's defaults; a device that goes away falls back to the default, and the
 call screen says so. Cameras come through Video4Linux on Linux, AVFoundation on
-macOS (which asks once for permission), and Media Foundation on Windows. The
-Flatpak is allowed its devices for this, since Flatpak has no narrower
-permission for cameras. On Linux, YU12 (I420) cameras, including Iriun Webcam,
+macOS (which asks once for permission), and Media Foundation on Windows.
+On Linux, YU12 (I420) cameras, including Iriun Webcam,
 are read natively without an external converter. Start Iriun on the computer
 and connect the phone before selecting its camera in a call.
 Calls use your platform's own audio (PipeWire, PulseAudio or ALSA on Linux, Core Audio on

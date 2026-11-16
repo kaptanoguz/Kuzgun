@@ -447,15 +447,6 @@ fn restrict_directory(_path: &Path) -> std::io::Result<()> {
 /// beside the state directory rather than inside it, because the state
 /// directory must not exist before an earlier name's data is adopted.
 fn runtime_dir(project: &ProjectDirs, state: &Path) -> PathBuf {
-    // Flatpak gives each sandbox a private runtime directory and shares only
-    // this one between instances of the app.
-    #[cfg(target_os = "linux")]
-    if let (Some(runtime), Some(id)) = (
-        project.runtime_dir().and_then(Path::parent),
-        std::env::var_os("FLATPAK_ID"),
-    ) {
-        return runtime.join("app").join(id);
-    }
     if let Some(runtime) = project.runtime_dir() {
         return runtime.to_path_buf();
     }

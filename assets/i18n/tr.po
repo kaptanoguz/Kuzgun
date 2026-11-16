@@ -1886,11 +1886,11 @@ msgstr "Güncellemeleri otomatik indir"
 
 #: src/ui/settings.rs:711
 msgid ""
-"You still choose when to restart. Package managers and Flatpak update "
+"You still choose when to restart. Package managers update "
 "Kuzgun themselves."
 msgstr ""
 "Yeniden başlatma zamanını yine siz seçersiniz. Paket yöneticileri ve "
-"Flatpak, Kuzgun'i kendileri günceller."
+"Kuzgun'i kendileri günceller."
 
 #: src/ui/settings.rs:724
 #, rust-format

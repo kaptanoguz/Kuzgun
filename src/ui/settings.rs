@@ -721,7 +721,7 @@ fn sections(app: &App) -> Vec<Section> {
         translated(locale, "Download updates automatically"),
         translated(
             locale,
-            "You still choose when to restart. Package managers and Flatpak update Kuzgun themselves.",
+            "You still choose when to restart. Package managers update Kuzgun themselves.",
         ),
         |settings| &mut settings.download_updates_automatically,
     );

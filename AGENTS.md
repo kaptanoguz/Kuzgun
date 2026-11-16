@@ -759,7 +759,7 @@ released, which goes out as soon as it is fixed.
 A release is not finished when the tag is pushed. Do these in order:
 
 1. From a clean, up-to-date `main`, bump `version` in `Cargo.toml`, add the
-   release to the `<releases>` list in the Flatpak metainfo, and update
+   release to the `<releases>` list in the AppStream metainfo, and update
    `Cargo.lock` with a build. Write the release notes, in the style above, to
    `packaging/release-notes/vX.Y.Z.md`: the release workflow publishes that
    file as the release description, and a stable tag without it fails. Link
@@ -784,13 +784,8 @@ A release is not finished when the tag is pushed. Do these in order:
    download page offers the new version and every download link loads. Set
    `release_asset_prefix` to `zapfast` and `release_app_name` to `ZapFast`
    only once those assets exist.
-5. Update the AUR packages from the templates in `packaging/arch/`. The shared
-   packaging workflow generates versions, hashes and `.SRCINFO` after the
-   release exists, and publishes when `PUBLISH_AUR` and the required secrets
-   are configured. Otherwise use `native-packages` to build, stage,
-   review and publish the generated recipes; see `PACKAGING.md`. Validate
-   native builds with `makepkg -f`. A recipe-only `zapfast-git` change does
-   not require an application release.
+5. The Linux package is the `.deb` the packaging workflow builds from the
+   release tarball. See `PACKAGING.md`.
 
 ## Definition of done
 

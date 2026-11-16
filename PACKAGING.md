@@ -1,8 +1,8 @@
 # Packaging
 
 [`native-packages.yaml`](native-packages.yaml) is the packaging configuration:
-it pins the shared CLI and nFPM versions and declares Linux amd64/arm64 inputs,
-DEB/RPM/AppImage contents, dependencies, recipe templates and downstream repositories.
+it pins the shared CLI and nFPM versions and declares the Linux `.deb`
+contents, dependencies, and the macOS Homebrew recipe.
 Application assets and native recipes stay in `packaging/`.
 
 Version 0.13.0 introduces the Kuzgun name and `kuzgun` binary. Its AUR recipes
@@ -19,9 +19,7 @@ native-packages build --release v1.2.3 --target linux-amd64 --target linux-arm64
 ```
 
 Replace `v1.2.3` with an existing stable application release. Local use also
-requires nFPM 2.47.0, `bsdtar`, `readelf` and, for the AppImage,
-`mksquashfs` (squashfs-tools); AUR generation needs `makepkg`
-or Docker. CI installs its tooling. To package local release archives, put
+requires nFPM 2.47.0, `bsdtar` and `readelf`. CI installs its tooling. To package local release archives, put
 every configured input and recipe asset under `dist/`, then run
 `native-packages build --version 1.2.3 --target linux-amd64 --target linux-arm64`. Outputs go to
 `dist/packages/1.2.3`; use `--output` for a fresh destination when rebuilding.
@@ -49,7 +47,7 @@ AUR automation needs `PUBLISH_AUR=true`, `AUR_SSH_KEY` and `AUR_KNOWN_HOSTS`;
 Homebrew automation needs `PUBLISH_HOMEBREW=true` and
 `HOMEBREW_TAP_GITHUB_TOKEN`. Enable only configured destinations.
 
-The native macOS configuration, Windows and Flatpak build steps remain responsible
+The native macOS configuration and Windows build steps remain responsible
 for their native artifacts. Additional nFPM formats require suitable platform
 inputs and dependencies; adding a format does not port the application.
 See the [shared CLI documentation](https://github.com/crmne/native-packages/tree/v0.8.1)
@@ -161,52 +159,6 @@ fails rather than ship unsigned.
 A signature doesn't silence SmartScreen at once: reputation builds as people
 download releases signed by the same publisher, so keep signing every release
 with this identity.
-
-## Flatpak
-
-`packaging/flatpak/io.github.kaptanoguz.Kuzgun.yml` builds from source, with offline Cargo
-sources generated from the selected revision's lockfile. The adjacent bundle
-manifest reuses the Linux release binary, as in Spotifast. Both grant Wayland/X11,
-GPU, audio, network, keyring and tray access; attachments chosen by the user use
-portals. No home-directory permission is granted. `--persist=.local/state` keeps
-the archive and session on Flatpak versions without `XDG_STATE_HOME`.
-
-Generate a pinned Flathub checkout (Python needs `aiohttp`, `tomlkit` and `PyYAML`):
-
-```sh
-packaging/flatpak/flathub.sh vX.Y.Z /path/to/flathub-checkout
-flatpak-builder --user --install --force-clean build-dir /path/to/flathub-checkout/io.github.kaptanoguz.Kuzgun.yml
-```
-
-Flathub submission/review is a separate publication step; the manifest alone does
-not make Kuzgun available in Flathub. A maintainer must submit it manually:
-[Flathub's requirements](https://docs.flathub.org/docs/for-app-authors/requirements#generative-ai-policy)
-prohibit AI agents from submitting or writing submission interactions and require
-disclosure of generated material. Review the manifests and these changes before
-submitting. The manifests use the current Freedesktop 26.08 runtime; the CI builder
-container is 25.08 and installs the runtime and SDK named by the manifest. The GitHub release job includes the bundle
-in `checksums.txt`. No existing release files are replaced by this change.
-
-## Fedora COPR and openSUSE OBS
-
-`packaging/rpm/kuzgun.spec` builds Kuzgun from its release source for the
-[paolino/kuzgun](https://copr.fedorainfracloud.org/coprs/paolino/kuzgun/) COPR
-and the `home:paolino` OBS project. Fill in `@VERSION@` and `@DATE@` (in RPM
-changelog form, such as `Tue Nov 03 2026`), then build a source RPM and submit
-it. Cargo fetches the locked dependencies during the build, so the COPR project
-has network access turned on for builds. Fedora 44 and newer ship a new enough
-Rust. Submissions are a manual maintainer step that needs a COPR API token:
-`~/.config/copr`, also in 1Password as "Fedora COPR API". It lasts 180 days
-from the COPR API page; the current one expires on 2026-12-03. `copr-cli` is
-not packaged for Arch, so run it from a Fedora container with the config
-mounted read-only.
-
-```sh
-sed -e "s/@VERSION@/X.Y.Z/g" -e "s/@DATE@/$(LC_ALL=C date '+%a %b %d %Y')/" \
-  packaging/rpm/kuzgun.spec > kuzgun.spec
-spectool -g -R kuzgun.spec && rpmbuild -bs kuzgun.spec
-copr-cli build paolino/kuzgun ~/rpmbuild/SRPMS/kuzgun-X.Y.Z-1.*.src.rpm
-```
 
 ## winget
 

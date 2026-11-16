@@ -9,10 +9,8 @@ tool:
 libraries:
   libasound.so.2:
     deb: libasound2t64 | libasound2
-    rpm: alsa-lib
   libpipewire-0.3.so.0:
     deb: libpipewire-0.3-0t64 | libpipewire-0.3-0
-    rpm: pipewire-libs
 nfpm:
   name: kuzgun
   maintainer: Carmine Paolino <carmine@paolino.me>
@@ -27,20 +25,68 @@ nfpm:
     dst: "/usr/bin/kuzgun"
     file_info:
       mode: 493
-  - src: "@PAYLOAD@/kuzgun-v@VERSION@-@TARGET@/LICENSE"
-    dst: "/usr/share/licenses/kuzgun/LICENSE"
+  - src: LICENSE
+    dst: /usr/share/licenses/kuzgun/LICENSE
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/kuzgun-v@VERSION@-@TARGET@/README.md"
-    dst: "/usr/share/doc/kuzgun/README.md"
+  - src: README.md
+    dst: /usr/share/doc/kuzgun/README.md
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/kuzgun-v@VERSION@-@TARGET@/packaging/applications/io.github.kaptanoguz.Kuzgun.desktop"
-    dst: "/usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop"
+  - src: THIRD-PARTY-NOTICES.md
+    dst: /usr/share/licenses/kuzgun/THIRD-PARTY-NOTICES.md
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/kuzgun-v@VERSION@-@TARGET@/packaging/icons/kuzgun.svg"
-    dst: "/usr/share/icons/hicolor/scalable/apps/io.github.kaptanoguz.Kuzgun.svg"
+  - src: packaging/applications/io.github.kaptanoguz.Kuzgun.desktop
+    dst: /usr/share/applications/io.github.kaptanoguz.Kuzgun.desktop
+    file_info:
+      mode: 420
+  - src: packaging/metainfo/io.github.kaptanoguz.Kuzgun.metainfo.xml
+    dst: /usr/share/metainfo/io.github.kaptanoguz.Kuzgun.metainfo.xml
+    file_info:
+      mode: 420
+  - src: packaging/icons/kuzgun.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/io.github.kaptanoguz.Kuzgun.svg
+    file_info:
+      mode: 420
+  - src: packaging/icons/kuzgun-symbolic.svg
+    dst: /usr/share/icons/hicolor/symbolic/apps/io.github.kaptanoguz.Kuzgun-symbolic.svg
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/16x16/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/16x16/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/22x22/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/22x22/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/24x24/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/24x24/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/32x32/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/32x32/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/48x48/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/48x48/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/64x64/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/64x64/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/128x128/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/128x128/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/256x256/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/256x256/apps/io.github.kaptanoguz.Kuzgun.png
+    file_info:
+      mode: 420
+  - src: packaging/icons/hicolor/512x512/apps/io.github.kaptanoguz.Kuzgun.png
+    dst: /usr/share/icons/hicolor/512x512/apps/io.github.kaptanoguz.Kuzgun.png
     file_info:
       mode: 420
   - src: contrib/omarchy/kuzgun.json.tpl
@@ -72,26 +118,6 @@ nfpm:
       - libpipewire-0.3-0t64 | libpipewire-0.3-0
       - libgcc-s1
       - libstdc++6
-    rpm:
-      depends:
-      - libglvnd-glx
-      - libglvnd-egl
-      - libxkbcommon
-      - libxkbcommon-x11
-      - libwayland-client
-      - libwayland-cursor
-      - libwayland-egl
-      - libX11
-      - libX11-xcb
-      - libXcursor
-      - libXi
-      - libXrandr
-      - alsa-lib
-      - pipewire-libs
-      - libgcc
-      - libstdc++
-  rpm:
-    buildhost: github-actions
 # Windows code and installers are signed through Azure Artifact Signing as
 # PlentyLabs when the windows-signing environment provides the account
 # (PACKAGING.md, "Windows signing").
@@ -138,8 +164,6 @@ targets:
     compiler_target: x86_64-unknown-linux-gnu
     formats:
     - deb
-    - rpm
-    - appimage
     input:
       local: dist/kuzgun-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
       release_asset: kuzgun-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
@@ -150,8 +174,6 @@ targets:
     compiler_target: aarch64-unknown-linux-gnu
     formats:
     - deb
-    - rpm
-    - appimage
     input:
       local: dist/kuzgun-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
       release_asset: kuzgun-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
@@ -176,12 +198,6 @@ assets:
     local: dist/kuzgun-@VERSION@.tar.gz
 templates:
   homebrew/kuzgun.rb: packaging/homebrew/kuzgun.rb.in
-  arch/kuzgun/PKGBUILD: packaging/arch/kuzgun/PKGBUILD.in
-  arch/kuzgun/kuzgun.install: packaging/arch/kuzgun.install
-  arch/kuzgun-bin/PKGBUILD: packaging/arch/kuzgun-bin/PKGBUILD.in
-  arch/kuzgun-bin/kuzgun-bin.install: packaging/arch/kuzgun.install
-  arch/kuzgun-git/PKGBUILD: packaging/arch/kuzgun-git/PKGBUILD.in
-  arch/kuzgun-git/kuzgun-git.install: packaging/arch/kuzgun.install
 repositories:
   homebrew:
     url: https://github.com/crmne/homebrew-tap.git
@@ -192,38 +208,5 @@ repositories:
       homebrew/kuzgun.rb: Casks/kuzgun.rb
     version_file: Casks/kuzgun.rb
     version_pattern: 'version "([^"]+)"'
-    publish: push
-  aur-source:
-    group: aur
-    url: https://aur.archlinux.org/kuzgun.git
-    push_url: ssh://aur@aur.archlinux.org/kuzgun.git
-    branch: master
-    package_path: "."
-    files:
-      arch/kuzgun: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  aur-bin:
-    group: aur
-    url: https://aur.archlinux.org/kuzgun-bin.git
-    push_url: ssh://aur@aur.archlinux.org/kuzgun-bin.git
-    branch: master
-    package_path: "."
-    files:
-      arch/kuzgun-bin: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  aur-git:
-    group: aur
-    url: https://aur.archlinux.org/kuzgun-git.git
-    push_url: ssh://aur@aur.archlinux.org/kuzgun-git.git
-    branch: master
-    package_path: "."
-    files:
-      arch/kuzgun-git: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
     publish: push
 version_file: Cargo.toml
