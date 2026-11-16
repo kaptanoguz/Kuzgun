@@ -17,9 +17,9 @@
     with WhatsApp or Meta.</p>
   </description>
   <launchable type="desktop-id">io.github.kaptanoguz.Kuzgun.desktop</launchable>
-  <url type="homepage">https://github.com/kaptanoguz/Kuzgun>
+  <url type="homepage">https://github.com/kaptanoguz/Kuzgun</url>
   <url type="bugtracker">https://github.com/kaptanoguz/Kuzgun/issues</url>
-  <url type="help">https://github.com/kaptanoguz/Kuzgun>
+  <url type="help">https://github.com/kaptanoguz/Kuzgun</url>
   <url type="vcs-browser">https://github.com/kaptanoguz/Kuzgun</url>
   <screenshots>
     <screenshot type="default">

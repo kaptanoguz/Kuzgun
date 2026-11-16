@@ -52,7 +52,7 @@ sudo apt install build-essential cmake perl clang libclang-dev libasound2-dev li
 With Nix, `nix develop` provides the toolchain and every native dependency,
 and `nix run .#kuzgun` builds and runs it.
 
-The packaged desktop entry is `packaging/applications/kuzgun.desktop`;
+The packaged desktop entry is `packaging/applications/io.github.kaptanoguz.Kuzgun.desktop`;
 `packaging/install-user.sh` derives the user copy above from it.
 
 ## Link with your phone

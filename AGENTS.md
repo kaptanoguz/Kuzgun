@@ -348,13 +348,13 @@ protocol. These notes are for coding agents and new contributors.
   `fastframe_update::intercept` before anything else, so `--apply-update`,
   `--update-receipt` and `--update-error` keep working with older releases'
   helpers (`tests/update_flags.rs`). Portable releases carry
-  `packaging/zapfast-portable.txt`; the Windows installer has its own marker.
+  `packaging/kuzgun-portable.txt`; the Windows installer has its own marker.
 - Custom themes come from fastframe-theme (`theme::Catalog`, ZapFast's
   `fastframe_theme::Palette` impl in `src/theme.rs`): it scans local JSON
   palettes off the UI thread, and the app caches the last usable choice in
   settings, with the palettes shared with Spotifast embedded as defaults. On Linux filesystem notifications reload the catalog and the active
   Omarchy palette without a repaint timer; following Omarchy does not require
-  packaged assets. Changing `contrib/omarchy/zapfast.json.tpl` means saving the
+  packaged assets. Changing `contrib/omarchy/kuzgun.json.tpl` means saving the
   old text in `contrib/omarchy/previous/` and listing it in
   `omarchy_previous_templates`, so untouched installed copies are upgraded. Native packages ship optional hooks and templates, preserving
   existing per-user files. `reload-themes` uses the single-instance channel
