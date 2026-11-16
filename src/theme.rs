@@ -667,6 +667,9 @@ pub fn install(ctx: &egui::Context) {
     // egui keeps all three copies of every image otherwise, and only ever
     // evicts the textures of SVGs.
     ctx.options_mut(|options| options.reduce_texture_memory = true);
+    // After the stock loaders, so a photo is decoded at display size and an
+    // icon or a GIF still reaches the loader that owns it.
+    crate::image_cache::install(ctx);
 }
 
 /// Applies the palette to egui widgets.
@@ -797,6 +800,19 @@ fn primary_font() -> fastframe_fonts::Primary {
 /// where there is none), egui's own fonts behind it, and installed fonts
 /// for the scripts it lacks, hinted as the desktop asks. Inter also draws
 /// the [`tabular`] timers.
+///
+/// Large fallbacks (CJK, and the other scripts Inter does not draw) are
+/// registered here up front. egui parses every face in `FontDefinitions`
+/// inside `set_fonts`: constructing a face builds its character map and
+/// shaping tables before any glyph is drawn, and nothing in egui defers that
+/// parse until a codepoint is missing. Glyph bitmaps are already rasterized
+/// only when used, and fastframe-fonts memory-maps the files so pages that
+/// nobody reads stay out of anonymous memory. Loading one script later would
+/// mean calling `set_fonts` again, which discards the atlas, and
+/// fastframe-fonts aligns the whole fallback set in one step. A single
+/// script cannot be selected through its public API. Emoji is not one of
+/// these faces: fastframe-emoji paints a picture when a sequence is drawn,
+/// and the bundled font is part of the binary.
 fn install_fonts(ctx: &egui::Context) {
     let primary = primary_font();
     let mut fonts = fastframe_fonts::FontSetup::default()

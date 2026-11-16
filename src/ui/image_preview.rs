@@ -586,9 +586,9 @@ fn still(
         );
         return None;
     };
-    // Registered with the image cache like every other draw site, so a sweep
-    // never releases the picture while it is on screen.
-    let image = crate::ui::widgets::file_image(ui, path);
+    // The file's own pixels, not the display-sized decode the bubble uses.
+    // A sweep keeps it while this frame draws it; closing the viewer drops it.
+    let image = crate::image_cache::viewer_image(ui, path);
     match image.load_for_size(ui.ctx(), canvas) {
         Ok(egui::load::TexturePoll::Ready { texture }) => {
             let size = display_size(texture.size, canvas, preview.is_fit(), preview.zoom());
@@ -1637,9 +1637,8 @@ fn zoom_input(ui: &mut egui::Ui, area: Rect, trackpad: bool) -> Option<(f32, Vec
 
 /// Size the image is drawn at from the texture's intrinsic pixel dimensions:
 /// fitted into the canvas, or scaled by the preview's zoom factor. Zoom is
-/// applied here only. The size hint passed when loading does not change the
-/// texture: egui decodes raster formats (all the preview accepts) once at full
-/// resolution and reports the source size, whatever size is asked for.
+/// applied here only. The viewer loads the file's own pixels and the texture
+/// reports that size, so the fit is the file's aspect, not the canvas.
 fn display_size(original: Vec2, canvas: Vec2, fit: bool, zoom: f32) -> Vec2 {
     let (width, height) = if fit {
         crate::image_preview::fit_size(original.x, original.y, canvas.x, canvas.y)
