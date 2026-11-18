@@ -1763,15 +1763,15 @@ impl Backend {
         let (command_tx, command_rx) = mpsc::unbounded_channel();
         let (event_tx, event_rx) = std::sync::mpsc::channel();
         let runtime = tokio::runtime::Builder::new_multi_thread()
-            .worker_threads(2)
-            .thread_name("zapfast-runtime")
+            .worker_threads(4)
+            .thread_name("kuzgun-runtime")
             .enable_all()
             .build()
             .expect("unable to start the async runtime");
         let worker_commands = command_tx.clone();
         let (startup, started) = tokio::sync::oneshot::channel();
         let thread = std::thread::Builder::new()
-            .name("zapfast-backend".to_string())
+            .name("kuzgun-backend".to_string())
             .spawn(move || {
                 runtime.block_on(async move {
                     if started.await.is_ok() {

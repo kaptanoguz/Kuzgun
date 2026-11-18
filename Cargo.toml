@@ -333,10 +333,12 @@ harness = false
 demo = []
 
 [profile.release]
-lto = "thin"
+opt-level = 3
+lto = "fat"
 codegen-units = 1
 strip = true
 panic = "abort"
+overflow-checks = false
 
 # Full debuginfo tripled link time and test-build time; CARGO_PROFILE_DEV_DEBUG=true restores it.
 [profile.dev]
