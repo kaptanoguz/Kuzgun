@@ -16,7 +16,7 @@ struct Cli {
     #[arg(short, long)]
     verbose: bool,
     /// Start in the tray without opening a window, when the tray is available
-    /// and ZapFast keeps running in the background. For login autostart.
+    /// and Kuzgun keeps running in the background. For login autostart.
     #[arg(long)]
     start_hidden: bool,
 
@@ -76,7 +76,7 @@ struct Cli {
     #[arg(long, requires = "demo")]
     demo_macos: bool,
 
-    /// Draw ZapFast's own title bar and window buttons, as Settings >
+    /// Draw Kuzgun's own title bar and window buttons, as Settings >
     /// Appearance > Custom title bar does, on Windows and Linux (demo only).
     #[cfg(feature = "demo")]
     #[arg(long, conflicts_with = "demo_macos")]
@@ -116,9 +116,9 @@ struct Cli {
 
 #[derive(Debug, clap::Subcommand)]
 enum Control {
-    /// Reload palettes in an already-running ZapFast without showing its window.
+    /// Reload palettes in an already-running Kuzgun without showing its window.
     ReloadThemes,
-    /// Quit an already-running ZapFast, which closing its window leaves in the tray.
+    /// Quit an already-running Kuzgun, which closing its window leaves in the tray.
     Quit,
 }
 
