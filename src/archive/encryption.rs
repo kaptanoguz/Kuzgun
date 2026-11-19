@@ -12,8 +12,13 @@ const HEADER: &[u8; 16] = b"SQLite format 3\0";
 
 /// Keyring service for archives opened by Kuzgun.
 const KEYRING_SERVICE: &str = "io.github.kaptanoguz.Kuzgun";
-/// Service ZapFast used, read once so a moved archive keeps its key.
-const LEGACY_KEYRING_SERVICE: &str = "rocks.zapfast.Kuzgun";
+/// Services ZapFast used, read once so a moved archive keeps its key.
+const LEGACY_KEYRING_SERVICES: &[&str] = &[
+    "rocks.zapfast.ZapFast",
+    "rocks.zapfast.Kuzgun",
+    "zapfast",
+    "kuzgun",
+];
 
 fn plaintext(path: &Path) -> Result<bool> {
     let mut file = match fs::File::open(path) {
@@ -167,7 +172,7 @@ fn copy_archive_key_in(
 /// such as a removed account's. Never call it while the archive exists.
 pub fn forget_archive_key(identity: &str) -> Result<()> {
     let store = platform_store()?;
-    for service in [KEYRING_SERVICE, LEGACY_KEYRING_SERVICE] {
+    for service in std::iter::once(&KEYRING_SERVICE).chain(LEGACY_KEYRING_SERVICES) {
         let entry = store
             .build(service, identity, None)
             .map_err(keyring_error)?;
@@ -253,7 +258,12 @@ fn legacy_secret(
     store: &dyn CredentialStoreApi,
     identity: &str,
 ) -> Result<Option<Zeroizing<Vec<u8>>>> {
-    read_secret(store, LEGACY_KEYRING_SERVICE, identity)
+    for service in LEGACY_KEYRING_SERVICES {
+        if let Some(secret) = read_secret(store, service, identity)? {
+            return Ok(Some(secret));
+        }
+    }
+    Ok(None)
 }
 
 fn platform_store() -> Result<std::sync::Arc<dyn CredentialStoreApi>> {
@@ -730,7 +740,7 @@ mod tests {
         let old_identity = identity_for(&old).unwrap();
         let secret = vec![7u8; 32];
         store
-            .build(LEGACY_KEYRING_SERVICE, &old_identity, None)
+            .build(LEGACY_KEYRING_SERVICES[0], &old_identity, None)
             .unwrap()
             .set_secret(&secret)
             .unwrap();
