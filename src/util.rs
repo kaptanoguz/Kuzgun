@@ -772,9 +772,15 @@ const SMALL_MARK: &[u8] = include_bytes!("../packaging/icons/kuzgun-small.svg");
 /// Monochrome raven with a cream outline, for the tray on a dark or light panel.
 const SYMBOLIC_MARK: &[u8] = include_bytes!("../packaging/icons/kuzgun-symbolic.svg");
 const SMALL_BELOW: usize = 40;
+const MASTER_ICON_PNG: &[u8] = include_bytes!("../packaging/icons/kuzgun.png");
 
 /// Rasterizes the logo to straight-alpha RGBA.
 pub fn app_icon_rgba(size: usize) -> Vec<u8> {
+    if let Ok(img) = image::load_from_memory(MASTER_ICON_PNG) {
+        let side = size.max(1) as u32;
+        let resized = img.resize_exact(side, side, image::imageops::FilterType::Lanczos3);
+        return resized.to_rgba8().into_raw();
+    }
     let mark = if size < SMALL_BELOW { SMALL_MARK } else { MARK };
     match render_mark(mark, size) {
         Some(rgba) => rgba,

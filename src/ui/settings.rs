@@ -1877,11 +1877,6 @@ fn about(app: &mut App, ui: &mut egui::Ui) {
                 .push(Action::OpenUrl(env!("CARGO_PKG_REPOSITORY").to_owned()));
         }
     });
-    ui.add_space(14.0);
-    if widgets::credit(ui, &palette, app.locale) {
-        app.actions
-            .push(Action::OpenUrl(widgets::AUTHOR_URL.to_owned()));
-    }
 }
 
 /// The Custom title bar switch. Turning it over replaces the window, so it

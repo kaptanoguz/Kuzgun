@@ -1089,12 +1089,6 @@ fn about(app: &mut App, ui: &mut egui::Ui) {
         theme::regular(12.5),
         palette.secondary,
     );
-    theme::paragraph(
-        ui,
-        crate::i18n::gettext(app.locale, "Kuzgun is a fork of ZapFast."),
-        theme::regular(12.5),
-        palette.secondary,
-    );
     ui.add_space(6.0);
     ui.horizontal(|ui| {
         if theme::link(
@@ -1115,11 +1109,6 @@ fn about(app: &mut App, ui: &mut egui::Ui) {
             ));
         }
     });
-    ui.add_space(4.0);
-    if super::widgets::credit(ui, &palette, app.locale) {
-        app.actions
-            .push(Action::OpenUrl(super::widgets::AUTHOR_URL.to_owned()));
-    }
 }
 
 /// Formats the localized singular or plural selected-message count.

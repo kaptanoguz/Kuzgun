@@ -135,6 +135,122 @@ impl Palette {
         }
     }
 
+    /// Deep midnight navy theme matching the Kuzgun brand, with gold scroll accents.
+    pub fn kuzgun() -> Self {
+        Self {
+            dark: true,
+            window: Color32::from_rgb(0x0a, 0x0f, 0x18),
+            panel: Color32::from_rgb(0x10, 0x17, 0x25),
+            surface: Color32::from_rgb(0x18, 0x22, 0x35),
+            surface_hover: Color32::from_rgb(0x21, 0x2e, 0x46),
+            surface_active: Color32::from_rgb(0x2a, 0x3b, 0x58),
+            outline: Color32::from_rgb(0x1d, 0x29, 0x3d),
+            text: Color32::from_rgb(0xf1, 0xf5, 0xf9),
+            secondary: Color32::from_rgb(0x94, 0xa3, 0xb8),
+            dim: Color32::from_rgb(0x64, 0x74, 0x8b),
+            accent: Color32::from_rgb(0xd4, 0xaf, 0x37),
+            accent_hover: Color32::from_rgb(0xe5, 0xc1, 0x58),
+            on_accent: Color32::from_rgb(0x0a, 0x0f, 0x18),
+            danger: Color32::from_rgb(0xb9, 0x2b, 0x27),
+            warning: Color32::from_rgb(0xf5, 0x9e, 0x0b),
+            overlay: Color32::from_rgb(0x13, 0x1d, 0x2e),
+            shadow: Color32::from_black_alpha(160),
+            chat: Color32::from_rgb(0x0a, 0x0f, 0x18),
+            bubble_in: Color32::from_rgb(0x16, 0x21, 0x34),
+            bubble_out: Color32::from_rgb(0x1e, 0x3a, 0x66),
+            link: Color32::from_rgb(0x60, 0xa5, 0xfa),
+            read: Color32::from_rgb(0xd4, 0xaf, 0x37),
+            bubbles: BubbleStyle::WhatsApp,
+        }
+    }
+
+    /// Pitch black palette optimized for OLED displays and battery saving.
+    pub fn oled() -> Self {
+        Self {
+            dark: true,
+            window: Color32::BLACK,
+            panel: Color32::from_rgb(0x08, 0x08, 0x08),
+            surface: Color32::from_rgb(0x14, 0x14, 0x14),
+            surface_hover: Color32::from_rgb(0x20, 0x20, 0x20),
+            surface_active: Color32::from_rgb(0x2d, 0x2d, 0x2d),
+            outline: Color32::from_rgb(0x1a, 0x1a, 0x1a),
+            text: Color32::WHITE,
+            secondary: Color32::from_rgb(0xa0, 0xa0, 0xa0),
+            dim: Color32::from_rgb(0x70, 0x70, 0x70),
+            accent: Color32::from_rgb(0x00, 0xa8, 0x84),
+            accent_hover: Color32::from_rgb(0x06, 0xcf, 0x9c),
+            on_accent: Color32::BLACK,
+            danger: Color32::from_rgb(0xff, 0x45, 0x3a),
+            warning: Color32::from_rgb(0xff, 0xd6, 0x0a),
+            overlay: Color32::from_rgb(0x11, 0x11, 0x11),
+            shadow: Color32::from_black_alpha(200),
+            chat: Color32::BLACK,
+            bubble_in: Color32::from_rgb(0x16, 0x16, 0x16),
+            bubble_out: Color32::from_rgb(0x00, 0x5c, 0x4b),
+            link: Color32::from_rgb(0x53, 0xbd, 0xeb),
+            read: Color32::from_rgb(0x53, 0xbd, 0xeb),
+            bubbles: BubbleStyle::WhatsApp,
+        }
+    }
+
+    /// Arctic cool palette based on the popular Nord theme.
+    pub fn nord() -> Self {
+        Self {
+            dark: true,
+            window: Color32::from_rgb(0x24, 0x29, 0x33),
+            panel: Color32::from_rgb(0x2e, 0x34, 0x40),
+            surface: Color32::from_rgb(0x3b, 0x42, 0x52),
+            surface_hover: Color32::from_rgb(0x43, 0x4c, 0x5e),
+            surface_active: Color32::from_rgb(0x4c, 0x56, 0x6a),
+            outline: Color32::from_rgb(0x3b, 0x42, 0x52),
+            text: Color32::from_rgb(0xec, 0xef, 0xf4),
+            secondary: Color32::from_rgb(0xd8, 0xde, 0xe9),
+            dim: Color32::from_rgb(0x9a, 0xa3, 0xb2),
+            accent: Color32::from_rgb(0x88, 0xc0, 0xd0),
+            accent_hover: Color32::from_rgb(0x81, 0xa1, 0xc1),
+            on_accent: Color32::from_rgb(0x2e, 0x34, 0x40),
+            danger: Color32::from_rgb(0xbf, 0x61, 0x6a),
+            warning: Color32::from_rgb(0xeb, 0xcb, 0x8b),
+            overlay: Color32::from_rgb(0x2e, 0x34, 0x40),
+            shadow: Color32::from_black_alpha(150),
+            chat: Color32::from_rgb(0x24, 0x29, 0x33),
+            bubble_in: Color32::from_rgb(0x3b, 0x42, 0x52),
+            bubble_out: Color32::from_rgb(0x43, 0x4c, 0x5e),
+            link: Color32::from_rgb(0x88, 0xc0, 0xd0),
+            read: Color32::from_rgb(0x88, 0xc0, 0xd0),
+            bubbles: BubbleStyle::WhatsApp,
+        }
+    }
+
+    /// Dracula dark theme with vibrant purple and pink accents.
+    pub fn dracula() -> Self {
+        Self {
+            dark: true,
+            window: Color32::from_rgb(0x1e, 0x1f, 0x29),
+            panel: Color32::from_rgb(0x28, 0x2a, 0x36),
+            surface: Color32::from_rgb(0x34, 0x37, 0x46),
+            surface_hover: Color32::from_rgb(0x44, 0x47, 0x5a),
+            surface_active: Color32::from_rgb(0x54, 0x58, 0x6e),
+            outline: Color32::from_rgb(0x44, 0x47, 0x5a),
+            text: Color32::from_rgb(0xf8, 0xf8, 0xf2),
+            secondary: Color32::from_rgb(0xbf, 0xbf, 0xbf),
+            dim: Color32::from_rgb(0x8b, 0x8e, 0x9d),
+            accent: Color32::from_rgb(0xbd, 0x93, 0xf9),
+            accent_hover: Color32::from_rgb(0xff, 0x79, 0xc6),
+            on_accent: Color32::from_rgb(0x28, 0x2a, 0x36),
+            danger: Color32::from_rgb(0xff, 0x55, 0x55),
+            warning: Color32::from_rgb(0xf1, 0xfa, 0x8c),
+            overlay: Color32::from_rgb(0x28, 0x2a, 0x36),
+            shadow: Color32::from_black_alpha(150),
+            chat: Color32::from_rgb(0x1e, 0x1f, 0x29),
+            bubble_in: Color32::from_rgb(0x28, 0x2a, 0x36),
+            bubble_out: Color32::from_rgb(0x4e, 0x4a, 0x72),
+            link: Color32::from_rgb(0x8b, 0xe9, 0xfd),
+            read: Color32::from_rgb(0x8b, 0xe9, 0xfd),
+            bubbles: BubbleStyle::WhatsApp,
+        }
+    }
+
     /// A dark theme in the neutral greys of macOS, with bubbles shaped and
     /// coloured as a default Mac's Messages draws them: others' in its grey,
     /// yours in iMessage blue with white text, shaded down the view. The
